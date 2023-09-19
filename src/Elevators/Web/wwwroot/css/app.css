@@ -2,8 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-h1:focus {
-    outline: none;
+@font-face {
+    font-family: "Lexend";
+    font-weight: 100;
+    src: url("../fonts/Lexend-Thin.woff2") format("woff2"),
+    url("../fonts/Lexend-Thin.woff") format("woff");
+}
+@font-face {
+    font-family: "Lexend";
+    font-weight: 200;
+    src: url("../fonts/Lexend-ExtraLight.woff2") format("woff2"),
+    url("../fonts/Lexend-ExtraLight.woff") format("woff");
+}
+@font-face {
+    font-family: "Lexend";
+    font-weight: 300;
+    src: url("../fonts/Lexend-Light.woff2") format("woff2"),
+    url("../fonts/Lexend-Light.woff") format("woff");
+}
+@font-face {
+    font-family: "Lexend";
+    font-weight: 400;
+    src: url("../fonts/Lexend-Regular.woff2") format("woff2"),
+    url("../fonts/Lexend-Regular.woff") format("woff");
+}
+@font-face {
+    font-family: "Lexend";
+    font-weight: 500;
+    src: url("../fonts/Lexend-Medium.woff2") format("woff2"),
+    url("../fonts/Lexend-Medium.woff") format("woff");
+}
+@font-face {
+    font-family: "Lexend";
+    font-weight: 600;
+    src: url("../fonts/Lexend-SemiBold.woff2") format("woff2"),
+    url("../fonts/Lexend-SemiBold.woff") format("woff");
+}
+@font-face {
+    font-family: "Lexend";
+    font-weight: 700;
+    src: url("../fonts/Lexend-Bold.woff2") format("woff2"),
+    url("../fonts/Lexend-Bold.woff") format("woff");
+}
+@font-face {
+    font-family: "Lexend";
+    font-weight: 800;
+    src: url("../fonts/Lexend-ExtraBold.woff2") format("woff2"),
+    url("../fonts/Lexend-ExtraBold.woff") format("woff");
 }
 
 #blazor-error-ui {
@@ -34,3 +79,46 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+    
+body{
+    font-family: "Lexend", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+*{
+    font-size: 1rem;
+    margin: 0;
+}
+*:focus{
+    outline: none
+}
+
+main{
+    padding: 0 1rem;
+    min-height: calc(100vh - 4rem - 4rem - 2px);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    margin: 0;
+}
+
+h1{
+    font-size: 2.5rem !important;
+}
+h2{
+    font-size: 2rem !important;
+}
+h3{
+    font-size: 1.5rem !important;
+}
+
+hr{
+    @apply border-primary mx-20 my-12;
+    border-radius: 100%;
+}
