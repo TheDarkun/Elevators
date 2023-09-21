@@ -1,4 +1,4 @@
-﻿<header class="navbar bg-base-100 h-16">
+﻿<header class="navbar h-16 bg-neutral sticky top-0 z-10">
     <div class="navbar-start">
         <div class="dropdown">
             <label tabindex="0" class="btn btn-ghost lg:hidden">
@@ -7,6 +7,7 @@
             <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                 <li><a href="">Home</a></li>
                 <li><a href="/About">About</a></li>
+                <li><a href="/Dashboard">Dashboard</a></li>
                 <li>
                     <a>Parent</a>
                     <ul class="p-2">
@@ -23,19 +24,45 @@
         <ul class="menu menu-horizontal px-1">
             <li><a href="">Home</a></li>
             <li><a href="/About">About</a></li>
-            <li tabindex="0">
-                <details>
-                    <summary>Parent</summary>
-                    <ul class="p-2">
-                        <li><a>Submenu 1</a></li>
-                        <li><a>Submenu 2</a></li>
-                    </ul>
-                </details>
-            </li>
-            <li><a>Item 3</a></li>
+            <li><a href="/Dashboard">Dashboard</a></li>
+
         </ul>
     </div>
-    <div class="navbar-end" style="margin-right: 1rem">
-        <a class="btn btn-primary">Sign in</a>
-    </div>
+    <AuthorizeView>
+        <Authorized>
+             <div class="navbar-end" style="margin-right: 1rem">
+                @{
+                    var dict = context.User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value);
+                }
+                <ul class="menu menu-horizontal">
+                    <li tabindex="0" class="mr-4">
+                        <details>
+                            <summary>
+                                <div class="avatar">
+                                    <div class="w-12 h-12 mask mask-squircle">
+                                        <img src="https://cdn.discordapp.com/avatars/@(dict["Id"])/@(dict["Avatar"]).gif" id="avatar" alt="avatar" width="100px" height="100px">
+                                    </div>
+                                </div>
+                            </summary>
+                            <ul class="">
+                                <li><a>Submenu 1</a></li>
+                                <li><a>Submenu 2</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+                
+                
+                
+             </div>
+        </Authorized>
+        <NotAuthorized>
+             <div class="navbar-end" style="margin-right: 1rem">
+                <a class="btn btn-primary" href="/api/Account/Authorize">Sign in</a>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+    
+
+   
 </header>

@@ -1,10 +1,34 @@
 using System.Diagnostics;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Server.Controllers.Account;
+using Server.Managers.Account;
 using Tailwind;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("Auth:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddSingleton<IAccountManager, AccountManager>();
+
+builder.Services.AddSingleton<IAccountController, AccountController>();
 
 var app = builder.Build();
 
@@ -36,8 +60,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

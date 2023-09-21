@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/*!*5865F2*!*/
+/*@layer base {*/
+/*    :root{*/
+/*        --primary: #ff0ff;*/
+/*        --secondary: #EB459E;*/
+/*        --accent: #5865F2;*/
+/*        --neutral: rgba(255,0,255,0.2);*/
+/*        --base-100: #2c2f33;*/
+/*        --info: #3abff8;*/
+/*        --success: #57F287;*/
+/*        --warning: #FEE75C;*/
+/*        --error: #ED4245;*/
+/*    }*/
+/*}*/
+
 @font-face {
     font-family: "Lexend";
     font-weight: 100;
@@ -79,11 +94,25 @@
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
-    
+
+@keyframes animate{
+    0%{
+        background-position: 0 50%;
+    }
+    50%{
+        background-position: 100% 50%;
+    }
+    100%{
+        background-position: 0 50%;
+    }
+}
+
 body{
     font-family: "Lexend", sans-serif;
     margin: 0;
     padding: 0;
+
+    animation: animate 100s ease infinite;
 }
 
 *{
@@ -121,4 +150,10 @@ h3{
 hr{
     @apply border-primary mx-20 my-12;
     border-radius: 100%;
+}
+
+.glass-panel {
+    color: #fff;
+    background-color: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
 }
