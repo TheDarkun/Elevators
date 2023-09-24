@@ -1,15 +1,14 @@
 ﻿@page "/"
 <HeaderComponent/>
-<hr class="primary-hr"/>
-<main>
+<main class="px-8 py-16 flex flex-col gap-16">
   <section class="w-full flex justify-center">
     <div class="card w-[32rem] text-center flex">
-      <div class="card-body gap-8">
+      <div class="card-body gap-8 p-0">
         <h1 class="leading-12">Create professional Elevator game </h1>
         <p>Elevate your hosting game with Elevators, the thrilling multiplayer experience! With its dynamic gameplay and advanced technology stack, it's your ticket to unforgettable gaming sessions.</p>
         <div class="card-actions justify-center">
           <div class="join">
-            <button class="btn btn-primary join-item">Add to discord</button>
+            <a href="https://discord.com/oauth2/authorize?client_id=1135226184217677926&permissions=8&scope=bot%20applications.commands" class="btn btn-primary join-item">Add to discord</a>
             <AuthorizeView>
               <Authorized>
                 <a class="btn join-item" href="/Dashboard">Dashboard</a>
@@ -23,7 +22,7 @@
       </div>
     </div>
   </section>
-  <hr class="primary-hr"/>
+  <hr/>
   <section class="w-full flex justify-left" style="padding-left: 30%">
     <div class="card w-96 glass-panel">
       <figure><img class="w-80 h-80" src="imgs/Spreadsheet.svg"/></figure>
@@ -33,7 +32,7 @@
       </div>
     </div>
   </section>
-  <hr class="primary-hr"/>
+  <hr/>
   <section class="w-full flex justify-end" style="padding-right: 30%">
     <div class="card w-96 glass-panel">
       <figure><img class="w-80 h-80" src="imgs/Coffe_Break.svg"/></figure>
@@ -43,10 +42,10 @@
       </div>
     </div>
   </section>
-  <hr class="primary-hr"/>
+  <hr/>
   <section class="w-full flex justify-left" style="padding-left: 30%">
     <div class="card w-96 glass-panel">
-      <figure><img class="w-80 h-80" src="imgs/discord-mark-blue.svg"/></figure>
+      <figure><img class="w-80 h-80 p-12" src="imgs/discord-mark-blue.svg"/></figure>
       <div class="card-body">
         <h2 class="card-title">INTEGRATE</h2>
         <p>Integrate your server with Elevators bot to notify players to make decisions on time.</p>
@@ -54,5 +53,4 @@
     </div>
   </section>
 </main>
-<hr class="primary-hr"/>
 <FooterComponent/>

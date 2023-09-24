@@ -1,61 +1,15 @@
 ﻿@page "/Server/{Code:long}"
-<header class="navbar flex justify-center bg-red-700 h-16"> @*bg-base-100*@ 
-    <a class="normal-case text-xl text-center">Elevators</a>
-</header>
-<main class="flex gap-8 m-8" style="height: calc(100vh - 8rem)">
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+<main class="dashboard">
+    <DashboardHeaderComponent/>
     <ServerListComponent/>
-    <section class=" bg-blue-800 w-80 p-4 flex flex-col items-center gap-4">
-      <h2 class="text-center">Welcome to Dashboard!</h2>
-    </section>
-    <section>
-      <div class="card glass-panel">
-       <div class="overflow-x-auto card-body ">
-         <table class="table">
-           <!-- head -->
-           <thead>
-             <tr class="text-center">
-               <th>Floor</th>
-               <th>Player</th>
-               <th>Action</th>
-               <th></th>
-             </tr>
-           </thead>
-           <tbody>
-             <tr>
-               <td class="text-center text-2xl">4</td>
-               <td>
-                 <div class="flex items-center space-x-3">
-                   <div class="avatar">
-                     <div class="mask mask-squircle w-12 h-12">
-                       <img src="imgs/discordAvatar.png"/>
-                     </div>
-                   </div>
-                   <div>
-                     <div class="font-bold">Darkun</div>
-                     <div class="text-sm opacity-50">darkun68</div>
-                   </div>
-                 </div>
-               </td>
-               <td class="text-center text-error font-bold">
-                 Cut
-                 <br/>
-                 <span class="badge badge-ghost badge-sm">RealRedstar</span>
-               </td>
-               <td>
-                 <button class="btn btn-error btn-outline">Kick Player</button>
-               </td>
-             </tr>
-           </tbody>
-         </table>
-       </div>
-    </div>
-    </section>
-    
+    <HostingGameOnServerComponent serverId="@Code"/>
 </main>
 
-    @code {
-
+@code {
     [Parameter]
     public long Code { get; set; }
-
 }

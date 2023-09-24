@@ -36,6 +36,24 @@ public class AccountManager : IAccountManager
             throw new();
         }
     }
+
+    public async Task<bool> BotIsJoined(long guildId)
+    {
+        client.DefaultRequestHeaders.Clear();
+        client.DefaultRequestHeaders.Add("Authorization", $"Bot {config.GetSection("Discord:BotToken").Value!}");
+
+        
+        
+        Console.WriteLine("waiting");
+        
+        var response = await client.GetAsync($"https://discord.com/api/guilds/{guildId}");
+
+        if (response.IsSuccessStatusCode)
+            return true;
+
+        return false;
+    }
+
     public async Task<IEnumerable<DiscordServer>> GetJoinedServers(string id)
     {
         // Get discord token from jwtToken

@@ -84,6 +84,28 @@ public class AccountController : Controller, IAccountController
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
+
+    [HttpGet("{guildId}")]
+    [Authorize]
+    public async Task<IActionResult> BotIsJoined(long guildId)
+    {
+        try
+        {
+            await Task.Delay(1000);
+            
+            var result = await manager.BotIsJoined(guildId);
+
+            if (result)
+                return Ok();
+
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
     
     [HttpDelete]
     [Authorize]

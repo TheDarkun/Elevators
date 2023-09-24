@@ -1,0 +1,154 @@
+﻿@using Web.Connectors
+@inject IHostingGameOnServerConnector connector
+
+
+    @if (!connector.NotJoinedServers.Contains(serverId) && !connector.JoinedServers.Contains(serverId))
+        {
+            <article class="flex items-center justify-center">
+                <span class="loading loading-spinner loading-lg"></span>
+            </article>
+        }
+        else if (connector.NotJoinedServers.Contains(serverId))
+        {
+            <article class="flex items-center justify-center">
+                <section class="card card-side glass-panel shadow-xl p-8">
+                    <figure><img class="w-40" src="imgs/Add_Files.svg" alt="Movie"/></figure>
+                    <div class="card-body gap-4">
+                        <h2 class="card-title">Add Discord bot to this server</h2>
+                        <p>Click the button below to add our bot to your server.</p>
+                        <div class="card-actions justify-end">
+                            <a href="https://discord.com/oauth2/authorize?client_id=1135226184217677926&permissions=8&scope=bot%20applications.commands&guild_id=@serverId" class="btn btn-primary">Add to discord</a>
+                        </div>
+                    </div>
+                </section>
+            </article>
+        }
+        else if(connector.JoinedServers.Contains(serverId))
+        {
+            <article class="dashboard-article overflow-visible">
+                <section class=" glass-panel p-4 flex flex-col items-center gap-4 w-80">
+                    <h2 class="text-center">Welcome to Dashboard!</h2>
+                    <div class="avatar">
+                        <div class="w-24 mask mask-circle">
+                            <img src="imgs/discordAvatar.png"/>
+                        </div>
+                    </div>
+                    <h3>Server</h3>
+                    <button class="btn btn-error btn-outline w-3/4">Logout</button>
+                </section>
+                
+                <section class="flex flex-col gap-8 items-center">
+                    <h1 class="text-center">Currently Hosting</h1>
+                    <div class="card glass-panel w-1/2">
+                        <div class="overflow-x-auto card-body ">
+                            <table class="table">
+                                <!-- head -->
+                                <thead>
+                                <tr class="text-center">
+                                    <th>Floor</th>
+                                    <th>Player</th>
+                                    <th>Action</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center text-2xl">4</td>
+                                    <td>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-12 h-12">
+                                                    <img src="imgs/discordAvatar.png"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">Darkun</div>
+                                                <div class="text-sm opacity-50">darkun68</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center text-error font-bold">
+                                        Cut
+                                        <br/>
+                                        <span class="badge badge-ghost badge-sm">Ananas</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-error btn-outline w-40">Kick Player</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <h1>Current Playing</h1>
+                    <div class="card glass-panel w-1/2">
+                        <div class="overflow-x-auto card-body ">
+                            <table class="table">
+                                <!-- head -->
+                                <thead>
+                                <tr class="text-center">
+                                    <th>Floor</th>
+                                    <th>Player</th>
+                                    <th>Action</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center text-2xl">4</td>
+                                    <td>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-12 h-12">
+                                                    <img src="imgs/discordAvatar.png"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">Darkun</div>
+                                                <div class="text-sm opacity-50">darkun68</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center text-error font-bold">
+                                        Cut
+                                        <br/>
+                                        <span class="badge badge-ghost badge-sm">Ananas</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-outline w-40">Submit Action</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </article>
+            
+            
+        }
+
+    
+
+
+@code{
+
+    [Parameter]
+    public long serverId { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await connector.BotIsJoined(serverId);
+    }
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine("fachá");
+        // Check if @page attribute has been modified
+        // Perform additional logic here if needed
+            
+        // Execute OnInitializedAsync again
+        await base.OnParametersSetAsync();
+        await OnInitializedAsync();
+    }
+}
