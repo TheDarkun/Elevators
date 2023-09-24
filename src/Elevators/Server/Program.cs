@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MySqlConnector;
 using Server.Controllers.Account;
 using Server.Managers.Account;
 using Tailwind;
@@ -20,15 +21,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("Auth:Token").Value)),
+                .GetBytes(builder.Configuration.GetSection("Auth:Token").Value!)),
             ValidateIssuer = false,
             ValidateAudience = false
         };
     });
 
 builder.Services.AddSingleton<IAccountManager, AccountManager>();
-
 builder.Services.AddSingleton<IAccountController, AccountController>();
+
+builder.Services.AddTransient<MySqlConnection>(_ =>
+    new MySqlConnection(builder.Configuration.GetConnectionString("Main")));
 
 var app = builder.Build();
 
@@ -44,12 +47,16 @@ else
     app.UseHsts();
 }
 
+
 if (Environment.GetEnvironmentVariable("PROFILE") == "RunDiscord")
 {
     // Start the Discord project as a separate process
     Process discordProcess = new Process();
     discordProcess.StartInfo.FileName = "dotnet";
-    discordProcess.StartInfo.Arguments = "run --project ../Discord/Discord.csproj";
+    discordProcess.StartInfo.Arguments = "run --project ../Discord/Discord.csproj ";
+
+    discordProcess.StartInfo.Arguments += builder.Configuration.GetSection("Discord:BotToken").Value;
+    
     discordProcess.StartInfo.WorkingDirectory = "../Discord";
     discordProcess.Start();
 }

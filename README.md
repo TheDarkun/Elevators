@@ -14,3 +14,23 @@ Prepare for an electrifying twist on the classic rock-paper-scissors game with E
 - Everything is tightly integrated with a [MySQL](https://www.mysql.com/) database to manage and store data efficiently.
 - The versatility of [Tailwind CSS](https://tailwindui.com) has also been integrated to style and design the web components.
 - Stay tuned for more exciting enhancements!
+
+### How to start the database and Adminer 🐬
+
+Mysql port: <b>3037</b><br>
+Adminer port: <b>8080</b>
+
+Firstly you of course have to go to the directory which contains all the docker files and then type the command bellow. The common issue with it not booting is that you probably forgot to open the docker first.
+```bash
+docker-compose up -d
+```
+
+If you've made some important changes to the database and now want to store the data, you <b>HAVE TO</b> type out the command below or all your progress will be lost.
+```bash
+docker exec elevators-mysql /usr/bin/mysqldump -u root --password=example --all-databases > ./mysql-dump/backup.sql
+```
+
+Then you of course just put the docker back to bed.
+```bash
+docker-compose down
+```

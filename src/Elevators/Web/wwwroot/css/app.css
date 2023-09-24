@@ -124,7 +124,6 @@ body{
 }
 
 main{
-    padding: 0 1rem;
     min-height: calc(100vh - 4rem - 4rem - 2px);
 }
 
@@ -147,7 +146,7 @@ h3{
     font-size: 1.5rem !important;
 }
 
-hr{
+.primary-hr{
     @apply border-primary mx-20 my-12;
     border-radius: 100%;
 }

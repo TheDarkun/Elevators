@@ -1,7 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Collections.Immutable;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
+using MySqlConnector;
 using Shared.Models;
 using static System.Text.Encoding;
 
@@ -11,19 +13,21 @@ public class AccountManager : IAccountManager
 {
     private HttpClient client { get; }
     private IConfiguration config { get; }
-
-    public AccountManager(IConfiguration config, HttpClient client)
+    private MySqlConnection connection { get; }
+    
+    public AccountManager(IConfiguration config, HttpClient client, MySqlConnection connection)
     {
         this.config = config;
         this.client = client;
+        this.connection = connection;
     }
     
     public async Task<string> Authenticate(string code)
     {
         try
         {
-            var discordToken = await GetDiscordToken(code);
-            var JwtToken = await CreateJwtToken(discordToken);
+            var tokens = await GetDiscordTokens(code);
+            var JwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
             
             return JwtToken;
         }
@@ -32,8 +36,51 @@ public class AccountManager : IAccountManager
             throw new();
         }
     }
-    
-    private async Task<string> GetDiscordToken(string code)
+    public async Task<IEnumerable<DiscordServer>> GetJoinedServers(string id)
+    {
+        // Get discord token from jwtToken
+        var token = await GetUsersTokenFromDatabase(id);
+
+        if (token is null)
+            throw new ();
+        
+        // Make a GET request in /users/@me/guilds
+        client.DefaultRequestHeaders.Clear();
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        var response = await client.GetAsync("https://discord.com/api/users/@me/guilds");
+
+        var jsonContent = await response.Content.ReadAsStringAsync();
+        
+        // Deserialize result to an Immutable Array of DiscordServers
+        JsonSerializerOptions options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        };
+        
+        IEnumerable<DiscordServer> result = JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server => server.Permissions == 2147483647);
+        
+        // Return the result
+        return result;
+    }
+
+    private async Task<string?> GetUsersTokenFromDatabase(string id)
+    {
+        await connection.OpenAsync();
+
+        await using var command = new MySqlCommand($"SELECT access_token from Users WHERE id = '{id}'", connection);
+        var result = await command.ExecuteScalarAsync();
+
+        if (result is null)
+            return null;
+
+        var token = result.ToString();
+        await connection.CloseAsync();
+        return token;
+
+        
+    }
+
+    private async Task<(string, string)> GetDiscordTokens(string code)
     {
         var formData = new Dictionary<string, string>
         {
@@ -49,14 +96,13 @@ public class AccountManager : IAccountManager
         var content = await response.Content.ReadAsStreamAsync();
         var doc = await JsonDocument.ParseAsync(content);
         
-        var token = doc.RootElement.GetProperty("access_token");
-
-        return token.ToString();
+        var accessToken = doc.RootElement.GetProperty("access_token").ToString();
+        var refreshToken = doc.RootElement.GetProperty("refresh_token").ToString();
+        return (accessToken, refreshToken);
     }
-    
-    private async Task<string> CreateJwtToken(string token)
+    private async Task<string> CreateJwtToken(string accessToken, string refreshToken)
     {
-        var discordUser = await GetUserFromToken(token);
+        var discordUser = await GetUserFromToken(accessToken);
 
         if (discordUser is null)
             throw new();
@@ -79,12 +125,24 @@ public class AccountManager : IAccountManager
             expires: DateTime.Now.AddDays(7),
             signingCredentials: creds
         );
+
+        SaveUserToDatabase(discordUser.Id!, accessToken, refreshToken);
         
         var jwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
         
         return jwt;
     }
-    
+
+    private async void SaveUserToDatabase(string discordUserId, string accessToken, string refreshToken)
+    {
+        await connection.OpenAsync();
+        
+        await using var command = new MySqlCommand($"INSERT INTO Users VALUES ('{discordUserId}', '{accessToken}', '{refreshToken}');", connection);
+        await command.ExecuteNonQueryAsync();
+
+        await connection.CloseAsync();
+    }
+
     private async Task<DiscordUser?> GetUserFromToken(string token)
     {
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Managers.Account;
 
@@ -18,7 +19,7 @@ public class AccountController : Controller, IAccountController
     [AllowAnonymous]
     public IActionResult Authorize()
     {
-        return Redirect("https://discord.com/api/oauth2/authorize?client_id=1135226184217677926&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2FAccount%2FAuthenticate&response_type=code&scope=identify");
+        return Redirect("https://discord.com/api/oauth2/authorize?client_id=1135226184217677926&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2FAccount%2FAuthenticate&response_type=code&scope=identify%20guilds%20guilds.members.read");
     }
 
     [HttpGet]
@@ -58,6 +59,33 @@ public class AccountController : Controller, IAccountController
     }
 
     [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetJoinedServers()
+    {
+        try
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null)
+                return StatusCode(StatusCodes.Status401Unauthorized, "No Claims were found");
+
+            IEnumerable<Claim> claims = identity.Claims;
+            var id = claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+
+            if (id is null)
+                return StatusCode(StatusCodes.Status401Unauthorized, "No Id was found");
+            
+            var servers = await manager.GetJoinedServers(id);
+            return Ok(servers);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+    
+    [HttpDelete]
     [Authorize]
     public async Task<IActionResult> Logout()
     {

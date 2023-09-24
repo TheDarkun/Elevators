@@ -1,0 +1,51 @@
+﻿@using Web.Connectors
+@inject IServerListConnector connector
+
+<aside class="flex flex-col w-16 gap-4 bg-red-500 h-full">
+    @if (connector.DiscordServers is null)
+    {
+        <h1>Loading...</h1>
+    }
+    else
+    {
+        <AuthorizeView>
+            @{
+                var dict = context.User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value);
+            }
+            <a href="/Dashboard" class="avatar">
+                <div class="w-24 mask mask-circle hover:mask-squircle cursor-pointer">
+                    <img src="https://cdn.discordapp.com/avatars/@dict["Id"]/@(dict["Avatar"]).png"/>
+                </div>
+            </a>
+            <hr/>
+        </AuthorizeView>
+        
+        foreach (var server in connector.DiscordServers)
+        {
+            <a href="/Server/@server.Id" class="avatar">
+                <div class="w-24 mask mask-circle hover:mask-squircle cursor-pointer">
+                @if (string.IsNullOrWhiteSpace(server.Icon))
+                {
+                    <h3 class="bg-primary w-full h-full flex items-center justify-center">
+                        @server.Name.Substring(0,2)
+                    </h3>
+                }
+                else
+                {
+                    <img src="https://cdn.discordapp.com/icons/@(server.Id)/@(server.Icon).png?size=2048" />
+                }
+                </div>
+            </a>
+        }
+    }
+</aside>
+
+
+@code{
+
+    protected override async Task OnInitializedAsync()
+    {
+        await connector.RetrieveDiscordServersAsync();
+    }
+
+}

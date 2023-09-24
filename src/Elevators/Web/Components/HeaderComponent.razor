@@ -4,18 +4,9 @@
             <label tabindex="0" class="btn btn-ghost lg:hidden">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
             </label>
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <ul tabindex="0" class="menu dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                 <li><a href="">Home</a></li>
                 <li><a href="/About">About</a></li>
-                <li><a href="/Dashboard">Dashboard</a></li>
-                <li>
-                    <a>Parent</a>
-                    <ul class="p-2">
-                        <li><a>Submenu 1</a></li>
-                        <li><a>Submenu 2</a></li>
-                    </ul>
-                </li>
-                <li><a>Item 3</a></li>
             </ul>
         </div>
         <a class="pl-4 normal-case text-2xl">Elevators</a>
@@ -24,45 +15,41 @@
         <ul class="menu menu-horizontal px-1">
             <li><a href="">Home</a></li>
             <li><a href="/About">About</a></li>
-            <li><a href="/Dashboard">Dashboard</a></li>
-
         </ul>
     </div>
-    <AuthorizeView>
-        <Authorized>
-             <div class="navbar-end" style="margin-right: 1rem">
+    <div class="navbar-end" style="margin-right: 1rem">
+        <AuthorizeView>
+            <Authorized>
                 @{
                     var dict = context.User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value);
                 }
-                <ul class="menu menu-horizontal">
-                    <li tabindex="0" class="mr-4">
-                        <details>
-                            <summary>
-                                <div class="avatar">
-                                    <div class="w-12 h-12 mask mask-squircle">
-                                        <img src="https://cdn.discordapp.com/avatars/@(dict["Id"])/@(dict["Avatar"]).gif" id="avatar" alt="avatar" width="100px" height="100px">
-                                    </div>
-                                </div>
-                            </summary>
-                            <ul class="">
-                                <li><a>Submenu 1</a></li>
-                                <li><a>Submenu 2</a></li>
-                            </ul>
-                        </details>
-                    </li>
-                </ul>
-                
-                
-                
-             </div>
-        </Authorized>
-        <NotAuthorized>
-             <div class="navbar-end" style="margin-right: 1rem">
+                <div class="dropdown dropdown-end">
+                    <label class="avatar cursor-pointer" tabindex="0">
+                        <div class="w-12 h-12 mask mask-squircle hover:mask-circle">
+                            <img src="https://cdn.discordapp.com/avatars/@(dict["Id"])/@(dict["Avatar"]).png" id="avatar" alt="avatar" width="100px" height="100px">
+                        </div>
+                    </label>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li>
+                            <a class="flex justify-center" href="/Dashboard">
+                                Dashboard
+                                <?xml version="1.0" encoding="UTF-8"?><svg class="w-5 h-5" width="64px" height="64px" stroke-width="1.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M22 5v14a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2zM2 12h4M6 3v18" stroke="currentColor" stroke-width="1.4"></path></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex justify-center">
+                                Logout
+                                <?xml version="1.0" encoding="UTF-8"?><svg class="w-5 h-5" width="64px" height="64px" stroke-width="1.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 12h7m0 0l-3 3m3-3l-3-3M19 6V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2v-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </Authorized>
+            <NotAuthorized>
                 <a class="btn btn-primary" href="/api/Account/Authorize">Sign in</a>
-            </div>
-        </NotAuthorized>
-    </AuthorizeView>
-    
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
 
    
 </header>
