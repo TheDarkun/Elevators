@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 using Server.Controllers.Account;
+using Server.Controllers.Game;
 using Server.Managers.Account;
+using Server.Managers.Game;
 using Tailwind;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddSingleton<IAccountManager, AccountManager>();
 builder.Services.AddSingleton<IAccountController, AccountController>();
+
+builder.Services.AddSingleton<IGameManager, GameManager>();
+builder.Services.AddSingleton<IGameController, GameController>();
 
 builder.Services.AddTransient<MySqlConnection>(_ =>
     new MySqlConnection(builder.Configuration.GetConnectionString("Main")));

@@ -11,15 +11,15 @@ namespace Server.Managers.Account;
 
 public class AccountManager : IAccountManager
 {
-    private HttpClient client { get; }
-    private IConfiguration config { get; }
-    private MySqlConnection connection { get; }
+    private HttpClient Client { get; }
+    private IConfiguration Config { get; }
+    private MySqlConnection Connection { get; }
     
     public AccountManager(IConfiguration config, HttpClient client, MySqlConnection connection)
     {
-        this.config = config;
-        this.client = client;
-        this.connection = connection;
+        Config = config;
+        Client = client;
+        Connection = connection;
     }
     
     public async Task<string> Authenticate(string code)
@@ -27,9 +27,9 @@ public class AccountManager : IAccountManager
         try
         {
             var tokens = await GetDiscordTokens(code);
-            var JwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
+            var jwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
             
-            return JwtToken;
+            return jwtToken;
         }
         catch (Exception)
         {
@@ -39,14 +39,14 @@ public class AccountManager : IAccountManager
 
     public async Task<bool> BotIsJoined(long guildId)
     {
-        client.DefaultRequestHeaders.Clear();
-        client.DefaultRequestHeaders.Add("Authorization", $"Bot {config.GetSection("Discord:BotToken").Value!}");
+        Client.DefaultRequestHeaders.Clear();
+        Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
 
         
         
         Console.WriteLine("waiting");
         
-        var response = await client.GetAsync($"https://discord.com/api/guilds/{guildId}");
+        var response = await Client.GetAsync($"https://discord.com/api/guilds/{guildId}");
 
         if (response.IsSuccessStatusCode)
             return true;
@@ -56,44 +56,66 @@ public class AccountManager : IAccountManager
 
     public async Task<IEnumerable<DiscordServer>> GetJoinedServers(string id)
     {
-        // Get discord token from jwtToken
-        var token = await GetUsersTokenFromDatabase(id);
-
-        if (token is null)
-            throw new ();
-        
-        // Make a GET request in /users/@me/guilds
-        client.DefaultRequestHeaders.Clear();
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        var response = await client.GetAsync("https://discord.com/api/users/@me/guilds");
-
-        var jsonContent = await response.Content.ReadAsStringAsync();
-        
-        // Deserialize result to an Immutable Array of DiscordServers
-        JsonSerializerOptions options = new JsonSerializerOptions
+        try
         {
-            PropertyNameCaseInsensitive = true,
-        };
-        
-        IEnumerable<DiscordServer> result = JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server => server.Permissions == 2147483647);
-        
-        // Return the result
-        return result;
+            // Get discord token from jwtToken
+            var token = await GetUsersTokenFromDatabase(id);
+
+            if (token is null)
+                throw new();
+
+            // Make a GET request in /users/@me/guilds
+            Client.DefaultRequestHeaders.Clear();
+            Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var response = await Client.GetAsync("https://discord.com/api/users/@me/guilds");
+
+            var jsonContent = await response.Content.ReadAsStringAsync();
+
+            // Deserialize result to an Immutable Array of DiscordServers
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
+
+            IEnumerable<DiscordServer> result =
+                JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server =>
+                    server.Permissions == 2147483647);
+
+            // Return the result
+            return result;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     private async Task<string?> GetUsersTokenFromDatabase(string id)
     {
-        await connection.OpenAsync();
+        try
+        {
+            await Connection.OpenAsync();
 
-        await using var command = new MySqlCommand($"SELECT access_token from Users WHERE id = '{id}'", connection);
-        var result = await command.ExecuteScalarAsync();
+            await using var command = new MySqlCommand($"SELECT access_token from users WHERE user_id = '{id}'", Connection);
+            var result = await command.ExecuteScalarAsync();
 
-        if (result is null)
-            return null;
+            if (result is null)
+                return null;
 
-        var token = result.ToString();
-        await connection.CloseAsync();
-        return token;
+            var token = result.ToString();
+            return token;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            await Connection.CloseAsync();
+        }
+        
 
         
     }
@@ -102,15 +124,15 @@ public class AccountManager : IAccountManager
     {
         var formData = new Dictionary<string, string>
         {
-            { "client_id", config.GetSection("Discord:AppId").Value!},
-            { "client_secret", config.GetSection("Discord:AppSecret").Value!},
+            { "client_id", Config.GetSection("Discord:AppId").Value!},
+            { "client_secret", Config.GetSection("Discord:AppSecret").Value!},
             { "grant_type", "authorization_code" },
             { "code", code },
-            { "redirect_uri", $"{config.GetSection("Website:Url").Value!}api/Account/Authenticate"}
+            { "redirect_uri", $"{Config.GetSection("Website:Url").Value!}api/Account/Authenticate"}
         };
         var formContent = new FormUrlEncodedContent(formData);
-        client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
-        var response = await client.PostAsync("https://discord.com/api/v10/oauth2/token", formContent);
+        Client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
+        var response = await Client.PostAsync("https://discord.com/api/v10/oauth2/token", formContent);
         var content = await response.Content.ReadAsStreamAsync();
         var doc = await JsonDocument.ParseAsync(content);
         
@@ -133,7 +155,7 @@ public class AccountManager : IAccountManager
             new("Avatar", discordUser.Avatar ?? "") //TODO: GIF, PNG, JPG
         };
         
-        var key = new SymmetricSecurityKey(UTF8.GetBytes(config.GetSection("Auth:Token").Value!));
+        var key = new SymmetricSecurityKey(UTF8.GetBytes(Config.GetSection("Auth:Token").Value!));
         
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         
@@ -150,23 +172,23 @@ public class AccountManager : IAccountManager
         
         return jwt;
     }
-
+    
     private async void SaveUserToDatabase(string discordUserId, string accessToken, string refreshToken)
     {
-        await connection.OpenAsync();
+        await Connection.OpenAsync();
         
-        await using var command = new MySqlCommand($"INSERT INTO Users VALUES ('{discordUserId}', '{accessToken}', '{refreshToken}');", connection);
+        await using var command = new MySqlCommand($"INSERT INTO users VALUES ('{discordUserId}', '{accessToken}', '{refreshToken}');", Connection);
         await command.ExecuteNonQueryAsync();
 
-        await connection.CloseAsync();
+        await Connection.CloseAsync();
     }
 
     private async Task<DiscordUser?> GetUserFromToken(string token)
     {
 
-        client.DefaultRequestHeaders.Clear();
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        var response = await client.GetAsync("https://discord.com/api/users/@me");
+        Client.DefaultRequestHeaders.Clear();
+        Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        var response = await Client.GetAsync("https://discord.com/api/users/@me");
 
         var jsonContent = await response.Content.ReadAsStringAsync();
         

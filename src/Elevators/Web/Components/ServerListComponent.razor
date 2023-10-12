@@ -1,38 +1,38 @@
 ﻿@using Web.Connectors
-@inject IServerListConnector connector
+@inject IServerListConnector Connector
 
 <aside class="glass-panel row-start-2 h-full mx-8 flex flex-col w-24 gap-4  p-4 hide-overflow">
-
-        @if (connector.DiscordServers is null)
-        {
-            <section class="flex items-center justify-center h-full">
-                <span class="loading loading-spinner loading-lg"></span>
-            </section>
-        }
-        else
-        {
-            <AuthorizeView>
-                @{
-                    var dict = context.User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value);
-                }
-                <section class="flex flex-col gap-4">
-                    <a href="/Dashboard" class="avatar pb-2">
-                        <div class="w-16 h-16 mask mask-circle hover:mask-squircle cursor-pointer shadow-2xl shadow-red-50">
-                            <img class="" src="https://cdn.discordapp.com/avatars/@dict["Id"]/@(dict["Avatar"]).png"/>
-                        </div>
-                    </a>
-                    <hr/>
-                </section>
+    @if (Connector.DiscordServers is null)
+    {
+        <section class="flex items-center justify-center h-full">
+            <span class="loading loading-spinner loading-lg"></span>
+        </section>
+    }
+    else
+    {
+        <AuthorizeView>
+            @{
+                var dict = context.User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value);
+            }
+            <section class="overflow-visible">
+                <a href="/Dashboard" class="avatar flex items-center h-24 overflow-visible">
+                    <div class="h-24 mask mask-circle hover:mask-squircle cursor-pointer shadow-2xl">
+                        <img class="" src="https://cdn.discordapp.com/avatars/@dict["Id"]/@(dict["Avatar"]).png"/>
+                    </div>
+                </a>
                 
-            </AuthorizeView>
+            </section>
             
-            foreach (var server in connector.DiscordServers)
+        </AuthorizeView>
+        <hr/>
+        <section class="h-full w-full items-start overflow-y-scroll grid gap-4">
+            @foreach (var server in Connector.DiscordServers)
             {
-                <a href="/Server/@server.Id" class="avatar">
-                    <div class="w-24 mask mask-circle hover:mask-squircle cursor-pointer">
+                <a href="/Server/@server.Id" class="avatar h-24 overflow-visible">
+                    <div class="mask mask-circle hover:mask-squircle cursor-pointer overflow-visible">
                     @if (string.IsNullOrWhiteSpace(server.Icon))
                     {
-                        <h3 class="bg-primary w-full h-full flex items-center justify-center">
+                        <h3 class="bg-primary p-4 flex items-center justify-center w-full h-full">
                             @server.Name.Substring(0,2)
                         </h3>
                     }
@@ -43,8 +43,9 @@
                     </div>
                 </a>
             }
-        }
-    </aside>
+        </section>
+    }
+</aside>
 
 
 
@@ -53,7 +54,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await connector.RetrieveDiscordServersAsync();
+        await Connector.RetrieveDiscordServersAsync();
     }
 
 }
