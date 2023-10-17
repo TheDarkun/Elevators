@@ -14,21 +14,18 @@
             @{
                 var dict = context.User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value);
             }
-            <section class="overflow-visible">
-                <a href="/Dashboard" class="avatar flex items-center h-24 overflow-visible">
-                    <div class="h-24 mask mask-circle hover:mask-squircle cursor-pointer shadow-2xl">
-                        <img class="" src="https://cdn.discordapp.com/avatars/@dict["Id"]/@(dict["Avatar"]).png"/>
-                    </div>
-                </a>
-                
-            </section>
+            <a href="/Dashboard" class="mask mask-circle hover:mask-squircle overflow-visible">
+                <div class="cursor-pointer shadow-2xl">
+                    <img src="https://cdn.discordapp.com/avatars/@dict["Id"]/@(dict["Avatar"]).png"/>
+                </div>
+            </a>
             
         </AuthorizeView>
         <hr/>
-        <section class="h-full w-full items-start overflow-y-scroll grid gap-4">
+        <section class="h-full w-full items-start overflow-y-scroll gap-4">
             @foreach (var server in Connector.DiscordServers)
             {
-                <a href="/Server/@server.Id" class="avatar h-24 overflow-visible">
+                <a href="/Server/@server.Id" class="avatar overflow-visible">
                     <div class="mask mask-circle hover:mask-squircle cursor-pointer overflow-visible">
                     @if (string.IsNullOrWhiteSpace(server.Icon))
                     {
@@ -38,7 +35,7 @@
                     }
                     else
                     {
-                        <img src="https://cdn.discordapp.com/icons/@(server.Id)/@(server.Icon).png?size=2048" />
+                        <img class="w-24 h-24" src="https://cdn.discordapp.com/icons/@(server.Id)/@(server.Icon).png?size=2048" />
                     }
                     </div>
                 </a>
