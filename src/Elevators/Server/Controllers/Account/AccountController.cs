@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Managers.Account;
@@ -9,10 +10,10 @@ namespace Server.Controllers.Account;
 [ApiController]
 public class AccountController : Controller, IAccountController
 {
-    private IAccountManager manager { get; }
+    private IAccountManager Manager { get; }
     public AccountController(IAccountManager manager)
     {
-        this.manager = manager;
+        Manager = manager;
     }
     
     [HttpGet]
@@ -33,7 +34,7 @@ public class AccountController : Controller, IAccountController
             if (code is null)
                 throw new Exception();
             
-            var jwtToken = await manager.Authenticate(code);
+            var jwtToken = await Manager.Authenticate(code);
             
             var cookieOptions = new CookieOptions
             {
@@ -75,7 +76,7 @@ public class AccountController : Controller, IAccountController
             if (id is null)
                 return StatusCode(StatusCodes.Status401Unauthorized, "No Id was found");
             
-            var servers = await manager.GetJoinedServers(id);
+            var servers = await Manager.GetJoinedServers(id);
             return Ok(servers);
         }
         catch (Exception e)
@@ -93,7 +94,7 @@ public class AccountController : Controller, IAccountController
         {
             await Task.Delay(1000);
             
-            var result = await manager.BotIsJoined(guildId);
+            var result = await Manager.BotIsJoined(guildId);
 
             if (result)
                 return Ok();
@@ -113,7 +114,19 @@ public class AccountController : Controller, IAccountController
     {
         try
         {
-            return Ok("yo wassup");
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null)
+                return StatusCode(StatusCodes.Status401Unauthorized, "No Claims were found");
+
+            IEnumerable<Claim> claims = identity.Claims;
+            var id = claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+
+            if (id is null)
+                return StatusCode(StatusCodes.Status401Unauthorized, "No Id was found");
+            
+            await Manager.Logout(id);
+            return NoContent();
         }
         catch (Exception e)
         {

@@ -26,6 +26,7 @@ public class AccountManager : IAccountManager
     {
         try
         {
+            // Get tuple of access token and a refresh token
             var tokens = await GetDiscordTokens(code);
             var jwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
             
@@ -41,13 +42,11 @@ public class AccountManager : IAccountManager
     {
         Client.DefaultRequestHeaders.Clear();
         Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
-
-        
-        
-        Console.WriteLine("waiting");
         
         var response = await Client.GetAsync($"https://discord.com/api/guilds/{guildId}");
 
+        // 200 - Bot is on the server
+        // 404 - Bot is NOT on the server
         if (response.IsSuccessStatusCode)
             return true;
 
@@ -59,7 +58,7 @@ public class AccountManager : IAccountManager
         try
         {
             // Get discord token from jwtToken
-            var token = await GetUsersTokenFromDatabase(id);
+            var token = await GetUserTokenFromDatabase(id);
 
             if (token is null)
                 throw new();
@@ -76,7 +75,8 @@ public class AccountManager : IAccountManager
             {
                 PropertyNameCaseInsensitive = true,
             };
-
+            
+            // Get only servers, where the user is either an owner or has admin permissions
             IEnumerable<DiscordServer> result =
                 JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server =>
                     server.Permissions == 2147483647);
@@ -91,7 +91,28 @@ public class AccountManager : IAccountManager
         }
     }
 
-    private async Task<string?> GetUsersTokenFromDatabase(string id)
+    public async Task Logout(string userId)
+    {
+        try
+        {
+            await Connection.OpenAsync();
+            
+            // Remove user
+            await using var command = new MySqlCommand($"DELETE FROM users WHERE user_id='{userId}'", Connection);
+            await command.ExecuteNonQueryAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            await Connection.CloseAsync();
+        }
+    }
+
+    private async Task<string?> GetUserTokenFromDatabase(string id)
     {
         try
         {
@@ -115,9 +136,6 @@ public class AccountManager : IAccountManager
         {
             await Connection.CloseAsync();
         }
-        
-
-        
     }
 
     private async Task<(string, string)> GetDiscordTokens(string code)
@@ -173,19 +191,37 @@ public class AccountManager : IAccountManager
         return jwt;
     }
     
-    private async void SaveUserToDatabase(string discordUserId, string accessToken, string refreshToken)
+    private async void SaveUserToDatabase(string userId, string accessToken, string refreshToken)
     {
-        await Connection.OpenAsync();
-        
-        await using var command = new MySqlCommand($"INSERT INTO users VALUES ('{discordUserId}', '{accessToken}', '{refreshToken}');", Connection);
-        await command.ExecuteNonQueryAsync();
+        try
+        {
+            await Connection.OpenAsync();
 
-        await Connection.CloseAsync();
+            // Check if user isnt already in
+            await using var firstCommand = new MySqlCommand($"SELECT Count(*) FROM users WHERE user_id = '{userId}'", Connection);
+            var result = await firstCommand.ExecuteScalarAsync();
+
+            if (result is not null && (long)result > 0)
+                return;
+            
+            
+            // Add new values
+            await using var command = new MySqlCommand($"INSERT INTO users VALUES ('{userId}', '{accessToken}', '{refreshToken}');", Connection);
+            await command.ExecuteNonQueryAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            await Connection.CloseAsync();
+        }
     }
 
     private async Task<DiscordUser?> GetUserFromToken(string token)
     {
-
         Client.DefaultRequestHeaders.Clear();
         Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         var response = await Client.GetAsync("https://discord.com/api/users/@me");

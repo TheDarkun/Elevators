@@ -1,0 +1,9 @@
+﻿@using Web.Connectors
+@inject LogoutConnector Connector
+
+<a href="/" class="@Class" onclick="@Connector.Logout()">Logout</a>
+
+@code
+{
+    [Parameter] public string Class { get; set; }
+}

@@ -16,6 +16,7 @@ builder.Services.AddHttpClient("Elevators.ServerAPI",
 
 builder.Services.AddScoped<IHostingGameOnServerConnector, HostingGameOnServerConnector>();
 builder.Services.AddScoped<IServerListConnector, ServerListConnector>();
+builder.Services.AddScoped<ILogoutConnector, LogoutConnector>();
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Elevators.ServerAPI"));
