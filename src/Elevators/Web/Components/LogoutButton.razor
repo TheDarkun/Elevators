@@ -1,0 +1,22 @@
+﻿@using Web.Connectors
+@inject ILogoutConnector Connector
+
+<button class="@Class" @onclick="Connector.Logout">
+    @if (ChildContent is null)
+    {
+        <span>Logout</span>
+    }
+    else
+    {
+        @ChildContent
+    }
+</button>
+
+@code
+{
+    [Parameter]
+    public string? Class { get; set; } = "";
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
