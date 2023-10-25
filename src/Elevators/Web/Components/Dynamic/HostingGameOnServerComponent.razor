@@ -56,22 +56,31 @@
                     <section class="card card-side glass-panel shadow-xl p-8">
                         <figure><img class="w-40" src="imgs/Join.svg" alt="File Icon"/></figure>
                         <div class="card-body gap-4">
+                            <h2>Select hosting channel</h2>
+                            <div class="dropdown dropdown-bottom overflow-visible">
+                              <label tabindex="0" class="btn m-1 overflow-visible">Click</label>
+                                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 overflow-visible">
+                                    <li><a>Item 1</a></li>
+                                    <li><a>Item 2</a></li>
+                                </ul>
+                            </div>
                             <h2 class="card-title overflow-visible">Create new game</h2>
                             <div class="form-control w-full max-w-xs">
                                 <label class="label">
                                     <span class="label-text">Max player count</span>
                                 </label>
-                                <input type="number" placeholder="2" class="input input-bordered input-primary w-full max-w-xs" required min="2" max="10" />
+                                <input type="number" placeholder="2" class="input input-bordered input-primary w-full max-w-xs" required min="2" max="10"/>
                             </div>
                             <div class="form-control w-full max-w-xs">
-                              <label class="label">
-                                <span class="label-text">Max floor count</span>
-                              </label>
-                              <input type="number" placeholder="3" class="input input-bordered input-primary w-full max-w-xs" required min="3" max="99" />
+                                <label class="label">
+                                    <span class="label-text">Max floor count</span>
+                                </label>
+                                <input type="number" placeholder="3" class="input input-bordered input-primary w-full max-w-xs" required min="3" max="99"/>
                             </div>
                             <div class="card-actions justify-end">
                                 <a @onclick="() => isCreatingGame = true" class="btn btn-primary">Create game</a>
                             </div>
+
                         </div>
                     </section>
                 }

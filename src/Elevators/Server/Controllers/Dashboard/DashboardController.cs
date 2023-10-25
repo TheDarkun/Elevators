@@ -11,20 +11,15 @@ public class DashboardController : Controller, IDashboardController
 {
     private IDashboardManager Manager { get; }
 
-    public DashboardController(IDashboardManager manager)
-    {
-        Manager = manager;
-    }
+    public DashboardController(IDashboardManager manager) => Manager = manager;
     
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetJoinedServers()
+    public async Task<IActionResult> GetJoinedGuilds()
     {
         try
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            if (identity == null)
+            if (HttpContext.User.Identity is not ClaimsIdentity identity)
                 return StatusCode(StatusCodes.Status401Unauthorized, "No Claims were found");
 
             IEnumerable<Claim> claims = identity.Claims;
@@ -33,37 +28,39 @@ public class DashboardController : Controller, IDashboardController
             if (id is null)
                 return StatusCode(StatusCodes.Status401Unauthorized, "No Id was found");
             
-            var servers = await Manager.GetJoinedServers(id);
+            var servers = await Manager.GetJoinedGuilds(id);
             return Ok(servers);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
 
     [HttpGet("{guildId}")]
     [Authorize]
-    public async Task<IActionResult> GetServerChannels(long guildId)
+    public async Task<IActionResult> GetGuildChannels(long guildId)
     {
         try
         {
-            var result = Manager.
+            var result = await Manager.GetGuildChannels(guildId);
+            return Ok(result);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
-
+    
     [HttpGet("{guildId}")]
     [Authorize]
     public async Task<IActionResult> BotIsJoined(long guildId)
     {
         try
         {
+            // This is a simple prevencion so that when user spams in dashboard all servers, discord API does not shout errors for spam
             await Task.Delay(1000);
             
             var result = await Manager.BotIsJoined(guildId);
@@ -76,7 +73,7 @@ public class DashboardController : Controller, IDashboardController
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
 }

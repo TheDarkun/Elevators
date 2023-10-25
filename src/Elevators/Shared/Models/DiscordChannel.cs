@@ -2,5 +2,6 @@
 
 public sealed class DiscordChannel
 {
-    public List<string> Channels { get; set; }
+    public string Name { get; set; } = "";
+    public string Id { get; set; } = "";
 }

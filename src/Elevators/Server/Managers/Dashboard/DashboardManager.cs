@@ -1,16 +1,6 @@
 ﻿using MySqlConnector;
-using Newtonsoft.Json;
 using Shared.Models;
-using static System.Text.Encoding;
-using System.Collections.Immutable;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using MySqlConnector;
-using Shared.Models;
-using static System.Text.Encoding;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Server.Managers.Dashboard;
@@ -28,7 +18,7 @@ public class DashboardManager : IDashboardManager
         Client = client;
     }
 
-    public async Task<IActionResult> GetServerChannels(long guildId)
+    public async Task<IEnumerable<DiscordChannel>> GetGuildChannels(long guildId)
     {
         Client.DefaultRequestHeaders.Clear();
         Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
@@ -36,16 +26,17 @@ public class DashboardManager : IDashboardManager
         
         var jsonContent = await response.Content.ReadAsStringAsync();
         
-        // Deserialize result to an Immutable Array of DiscordServers
+        // Deserialize result to an Immutable Array of Guilds
         JsonSerializerOptions options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
         };
 
         IEnumerable<DiscordChannel> result =
-            JsonSerializer.Deserialize<IEnumerable<DiscordChannel>>(jsonContent, options)
+            JsonSerializer.Deserialize<IEnumerable<DiscordChannel>>(jsonContent, options) ?? Array.Empty<DiscordChannel>();
+        
+        return result;
     }
-
     public async Task<bool> BotIsJoined(long guildId)
     {
         Client.DefaultRequestHeaders.Clear();
@@ -61,42 +52,32 @@ public class DashboardManager : IDashboardManager
         return false;
     }
 
-    public async Task<IEnumerable<DiscordServer>> GetJoinedServers(string id)
+    public async Task<IEnumerable<DiscordServer>> GetJoinedGuilds(string id)
     {
-        try
-        {
-            // Get discord token from jwtToken
-            var token = await GetUserTokenFromDatabase(id);
+        // Get discord token from jwtToken
+        var token = await GetUserTokenFromDatabase(id);
 
-            if (token is null)
-                throw new();
-
-            // Make a GET request in /users/@me/guilds
-            Client.DefaultRequestHeaders.Clear();
-            Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            var response = await Client.GetAsync("https://discord.com/api/users/@me/guilds");
-
-            var jsonContent = await response.Content.ReadAsStringAsync();
-
-            // Deserialize result to an Immutable Array of DiscordServers
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            };
+        if (token is null)
+            throw new();
             
-            // Get only servers, where the user is either an owner or has admin permissions
-            IEnumerable<DiscordServer> result =
-                JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server =>
-                    server.Permissions == 2147483647);
+        Client.DefaultRequestHeaders.Clear();
+        Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        var response = await Client.GetAsync("https://discord.com/api/users/@me/guilds");
 
-            // Return the result
-            return result;
-        }
-        catch (Exception e)
+        var jsonContent = await response.Content.ReadAsStringAsync();
+
+        // Deserialize result to an Immutable Array of Guilds
+        JsonSerializerOptions options = new JsonSerializerOptions
         {
-            Console.WriteLine(e);
-            throw;
-        }
+            PropertyNameCaseInsensitive = true
+        };
+            
+        // Get only servers, where the user is either an owner or has admin permissions
+        IEnumerable<DiscordServer> result =
+            JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server =>
+                server.Permissions == 2147483647);
+            
+        return result;
     }
     
     private async Task<string?> GetUserTokenFromDatabase(string id)

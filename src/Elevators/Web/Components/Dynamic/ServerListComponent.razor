@@ -2,7 +2,7 @@
 @inject IServerListConnector Connector
 
 <aside class="glass-panel row-start-2 h-full mx-8 flex flex-col w-24 gap-4  p-4 hide-overflow">
-    @if (Connector.DiscordServers is null)
+    @if (Connector.Guilds is null)
     {
         <section class="flex items-center justify-center h-full">
             <span class="loading loading-spinner loading-lg"></span>
@@ -23,7 +23,7 @@
         </AuthorizeView>
         <hr/>
         <section class="h-full w-full items-start overflow-y-scroll gap-4">
-            @foreach (var server in Connector.DiscordServers)
+            @foreach (var server in Connector.Guilds)
             {
                 <a href="/Server/@server.Id" class="avatar overflow-visible">
                     <div class="mask mask-circle hover:mask-squircle cursor-pointer overflow-visible">
@@ -51,7 +51,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Connector.RetrieveDiscordServersAsync();
+        await Connector.RetrieveGuildsAsync();
     }
 
 }

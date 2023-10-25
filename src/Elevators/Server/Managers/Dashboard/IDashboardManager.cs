@@ -5,7 +5,7 @@ namespace Server.Managers.Dashboard;
 
 public interface IDashboardManager
 {
-    public Task<IActionResult> GetServerChannels();
+    public Task<IEnumerable<DiscordChannel>> GetGuildChannels(long guildId);
     public Task<bool> BotIsJoined(long guildId);
-    public Task<IEnumerable<DiscordServer>> GetJoinedServers(string code);   
+    public Task<IEnumerable<DiscordServer>> GetJoinedGuilds(string code);   
 }

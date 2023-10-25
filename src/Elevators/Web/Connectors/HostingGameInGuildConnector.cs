@@ -10,13 +10,13 @@ public interface IHostingGameOnServerConnector
     public Task BotIsJoined(long serverId);
 } 
 
-public class HostingGameOnServerConnector : IHostingGameOnServerConnector
+public class HostingGameInGuildConnector : IHostingGameOnServerConnector
 {
     private HttpClient client { get; }
     private IJSRuntime js { get; }
 
     
-    public HostingGameOnServerConnector(HttpClient client, IJSRuntime js)
+    public HostingGameInGuildConnector(HttpClient client, IJSRuntime js)
     {
         this.client = client;
         this.js = js;
@@ -40,8 +40,8 @@ public class HostingGameOnServerConnector : IHostingGameOnServerConnector
             client.DefaultRequestHeaders.Clear();
         
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await client.GetAsync($"api/Account/BotIsJoined/{serverId}");
-                
+            var response = await client.GetAsync($"api/Dashboard/BotIsJoined/{serverId}");
+
             if (response.IsSuccessStatusCode)
             {
                 JoinedServers.Add(serverId);
@@ -50,8 +50,6 @@ public class HostingGameOnServerConnector : IHostingGameOnServerConnector
             {
                 NotJoinedServers.Add(serverId);
             }
-
-
         }
         catch (Exception)
         {

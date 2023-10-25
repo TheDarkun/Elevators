@@ -24,18 +24,11 @@ public class AccountManager : IAccountManager
     
     public async Task<string> Authenticate(string code)
     {
-        try
-        {
-            // Get tuple of access token and a refresh token
-            var tokens = await GetDiscordTokens(code);
-            var jwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
-            
-            return jwtToken;
-        }
-        catch (Exception)
-        {
-            throw new();
-        }
+        // Get tuple of access token and a refresh token
+        var tokens = await GetDiscordTokens(code);
+        var jwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
+
+        return jwtToken;
     }
 
     

@@ -11,17 +11,12 @@ namespace Server.Controllers.Account;
 public class AccountController : Controller, IAccountController
 {
     private IAccountManager Manager { get; }
-    public AccountController(IAccountManager manager)
-    {
-        Manager = manager;
-    }
+    public AccountController(IAccountManager manager) => Manager = manager;
     
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult Authorize()
-    {
-        return Redirect("https://discord.com/api/oauth2/authorize?client_id=1135226184217677926&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2FAccount%2FAuthenticate&response_type=code&scope=identify%20guilds%20guilds.members.read");
-    }
+    public IActionResult Authorize() =>
+        Redirect("https://discord.com/api/oauth2/authorize?client_id=1135226184217677926&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2FAccount%2FAuthenticate&response_type=code&scope=identify%20guilds%20guilds.members.read");
 
     [HttpGet]
     [AllowAnonymous]
@@ -55,11 +50,9 @@ public class AccountController : Controller, IAccountController
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
-
-    
     
     [HttpDelete]
     [Authorize]
@@ -84,7 +77,7 @@ public class AccountController : Controller, IAccountController
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
 }

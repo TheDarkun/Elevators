@@ -26,7 +26,7 @@ public class GameController : Controller, IGameController
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
 }
