@@ -352,7 +352,7 @@ UNLOCK TABLES;
 --
 
 /*!40000 ALTER TABLE `innodb_index_stats` DISABLE KEYS */;
-INSERT  IGNORE INTO `innodb_index_stats` VALUES ('Main','users','GEN_CLUST_INDEX','2023-10-17 19:44:46','n_diff_pfx01',0,1,'DB_ROW_ID'),('Main','users','GEN_CLUST_INDEX','2023-10-17 19:44:46','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('Main','users','GEN_CLUST_INDEX','2023-10-17 19:44:46','size',1,NULL,'Number of pages in the index'),('mysql','component','PRIMARY','2023-10-17 19:03:40','n_diff_pfx01',0,1,'component_id'),('mysql','component','PRIMARY','2023-10-17 19:03:40','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('mysql','component','PRIMARY','2023-10-17 19:03:40','size',1,NULL,'Number of pages in the index'),('sys','sys_config','PRIMARY','2023-10-17 19:03:31','n_diff_pfx01',6,1,'variable'),('sys','sys_config','PRIMARY','2023-10-17 19:03:31','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('sys','sys_config','PRIMARY','2023-10-17 19:03:31','size',1,NULL,'Number of pages in the index');
+INSERT  IGNORE INTO `innodb_index_stats` VALUES ('Main','games','GEN_CLUST_INDEX','2023-10-25 09:17:55','n_diff_pfx01',0,1,'DB_ROW_ID'),('Main','games','GEN_CLUST_INDEX','2023-10-25 09:17:55','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('Main','games','GEN_CLUST_INDEX','2023-10-25 09:17:55','size',1,NULL,'Number of pages in the index'),('Main','users','GEN_CLUST_INDEX','2023-10-23 20:23:12','n_diff_pfx01',0,1,'DB_ROW_ID'),('Main','users','GEN_CLUST_INDEX','2023-10-23 20:23:12','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('Main','users','GEN_CLUST_INDEX','2023-10-23 20:23:12','size',1,NULL,'Number of pages in the index'),('mysql','component','PRIMARY','2023-10-23 20:23:10','n_diff_pfx01',0,1,'component_id'),('mysql','component','PRIMARY','2023-10-23 20:23:10','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('mysql','component','PRIMARY','2023-10-23 20:23:10','size',1,NULL,'Number of pages in the index'),('sys','sys_config','PRIMARY','2023-10-12 08:00:39','n_diff_pfx01',6,1,'variable'),('sys','sys_config','PRIMARY','2023-10-12 08:00:39','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('sys','sys_config','PRIMARY','2023-10-12 08:00:39','size',1,NULL,'Number of pages in the index');
 /*!40000 ALTER TABLE `innodb_index_stats` ENABLE KEYS */;
 
 --
@@ -360,7 +360,7 @@ INSERT  IGNORE INTO `innodb_index_stats` VALUES ('Main','users','GEN_CLUST_INDEX
 --
 
 /*!40000 ALTER TABLE `innodb_table_stats` DISABLE KEYS */;
-INSERT  IGNORE INTO `innodb_table_stats` VALUES ('Main','users','2023-10-17 19:44:46',0,1,0),('mysql','component','2023-10-17 19:03:40',0,1,0),('sys','sys_config','2023-10-17 19:03:31',6,1,0);
+INSERT  IGNORE INTO `innodb_table_stats` VALUES ('Main','games','2023-10-25 09:17:55',0,1,0),('Main','users','2023-10-23 20:23:12',0,1,0),('mysql','component','2023-10-23 20:23:10',0,1,0),('sys','sys_config','2023-10-12 08:00:39',6,1,0);
 /*!40000 ALTER TABLE `innodb_table_stats` ENABLE KEYS */;
 
 --
@@ -1073,6 +1073,30 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `Main` /*!40100 DEFAULT CHARACTER SET u
 USE `Main`;
 
 --
+-- Table structure for table `games`
+--
+
+DROP TABLE IF EXISTS `games`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `games` (
+  `server_id` varchar(24) DEFAULT NULL,
+  `max_floor` int DEFAULT '3' COMMENT 'How far up the player must reach to win',
+  `max_player_count` int DEFAULT '2' COMMENT 'Maximum amount of player that can join the game (minimal requirement are 2 players)',
+  `has_started` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `games`
+--
+
+LOCK TABLES `games` WRITE;
+/*!40000 ALTER TABLE `games` DISABLE KEYS */;
+/*!40000 ALTER TABLE `games` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -1092,6 +1116,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES ('534357635286171648','3B5AJO5sw3CwoOEMT9JmyzqXu4aRzx','5N8DOqFS7uF5r03THIQCL09wv8Ur40');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1105,4 +1130,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-17 19:47:34
+-- Dump completed on 2023-10-25 15:01:12
