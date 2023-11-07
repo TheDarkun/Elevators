@@ -31,14 +31,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddSingleton<IAccountController, AccountController>();
-builder.Services.AddSingleton<IAccountManager, AccountManager>();
+builder.Services.AddScoped<IAccountManager, AccountManager>();
+builder.Services.AddTransient<IAccountController, AccountController>();
 
-builder.Services.AddSingleton<IDashboardController, DashboardController>();
-builder.Services.AddSingleton<IDashboardManager, DashboardManager>();
+builder.Services.AddScoped<IGameManager, GameManager>();
+builder.Services.AddTransient<IGameController, GameController>();
 
-builder.Services.AddSingleton<IGameController, GameController>();
-builder.Services.AddSingleton<IGameManager, GameManager>();
+builder.Services.AddScoped<IDashboardManager, DashboardManager>();
+builder.Services.AddTransient<IDashboardController, DashboardController>();
 
 builder.Services.AddTransient<MySqlConnection>(_ =>
     new MySqlConnection(builder.Configuration.GetConnectionString("Main")));

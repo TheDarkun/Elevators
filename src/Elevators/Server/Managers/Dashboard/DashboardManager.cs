@@ -1,6 +1,8 @@
-﻿using MySqlConnector;
+﻿using System.Net;
+using MySqlConnector;
 using Shared.Models;
 using System.Text.Json;
+using Server.Models;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Server.Managers.Dashboard;
@@ -18,66 +20,94 @@ public class DashboardManager : IDashboardManager
         Client = client;
     }
 
-    public async Task<IEnumerable<DiscordChannel>> GetGuildChannels(long guildId)
+    public async Task<ManagerResult> GetGuildChannels(long guildId)
     {
-        Client.DefaultRequestHeaders.Clear();
-        Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
-        var response = await Client.GetAsync($"https://discord.com/api/guilds/{guildId}/channels");
-        
-        var jsonContent = await response.Content.ReadAsStringAsync();
-        
-        // Deserialize result to an Immutable Array of Guilds
-        JsonSerializerOptions options = new JsonSerializerOptions
+        try
         {
-            PropertyNameCaseInsensitive = true,
-        };
+            Client.DefaultRequestHeaders.Clear();
+            Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
+            var response = await Client.GetAsync($"https://discord.com/api/guilds/{guildId}/channels");
 
-        IEnumerable<DiscordChannel> result =
-            JsonSerializer.Deserialize<IEnumerable<DiscordChannel>>(jsonContent, options) ?? Array.Empty<DiscordChannel>();
+            if (!response.IsSuccessStatusCode)
+                return new(HttpStatusCode.InternalServerError, response.Content);
         
-        return result;
-    }
-    public async Task<bool> BotIsJoined(long guildId)
-    {
-        Client.DefaultRequestHeaders.Clear();
-        Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
+            var jsonContent = await response.Content.ReadAsStringAsync();
         
-        var response = await Client.GetAsync($"https://discord.com/api/guilds/{guildId}");
+            // Deserialize result to an Immutable Array of Guilds
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
 
-        // 200 - Bot is on the server
-        // 404 - Bot is NOT on the server
-        if (response.IsSuccessStatusCode)
-            return true;
-
-        return false;
-    }
-
-    public async Task<IEnumerable<DiscordServer>> GetJoinedGuilds(string id)
-    {
-        // Get discord token from jwtToken
-        var token = await GetUserTokenFromDatabase(id);
-
-        if (token is null)
-            throw new();
-            
-        Client.DefaultRequestHeaders.Clear();
-        Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        var response = await Client.GetAsync("https://discord.com/api/users/@me/guilds");
-
-        var jsonContent = await response.Content.ReadAsStringAsync();
-
-        // Deserialize result to an Immutable Array of Guilds
-        JsonSerializerOptions options = new JsonSerializerOptions
+            IEnumerable<DiscordChannel> guilds =
+                JsonSerializer.Deserialize<IEnumerable<DiscordChannel>>(jsonContent, options) ?? Array.Empty<DiscordChannel>();
+        
+            return new(HttpStatusCode.OK, guilds);
+        }
+        catch (Exception e)
         {
-            PropertyNameCaseInsensitive = true
-        };
+            return new(HttpStatusCode.InternalServerError, e);
+        }
+    }
+    public async Task<ManagerResult> BotIsJoined(long guildId)
+    {
+        try
+        {
+            Client.DefaultRequestHeaders.Clear();
+            Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
+        
+            var response = await Client.GetAsync($"https://discord.com/api/guilds/{guildId}");
+
+            // 200 - Bot is on the server
+            // 404 - Bot is NOT on the server
+            if (response.IsSuccessStatusCode)
+                return new (HttpStatusCode.OK);
+
+            return new(HttpStatusCode.NotFound);
+        }
+        catch (Exception e)
+        {
+            return new(HttpStatusCode.InternalServerError, e);
+        }
+    }
+
+    public async Task<ManagerResult> GetJoinedGuilds(string id)
+    {
+        try
+        {
+            // Get discord token from jwtToken
+            var token = await GetUserTokenFromDatabase(id);
+
+            if (token is null)
+                return new(HttpStatusCode.InternalServerError, "token is null");
             
-        // Get only servers, where the user is either an owner or has admin permissions
-        IEnumerable<DiscordServer> result =
-            JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server =>
-                server.Permissions == 2147483647);
+            Client.DefaultRequestHeaders.Clear();
+            Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var response = await Client.GetAsync("https://discord.com/api/users/@me/guilds");
+
+            if (!response.IsSuccessStatusCode)
+                return new(response.StatusCode, response.Content);
             
-        return result;
+            var jsonContent = await response.Content.ReadAsStringAsync();
+
+            // Deserialize result to an Immutable Array of Guilds
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            
+            // Get only servers, where the user is either an owner or has admin permissions
+            // 2147483647 is code for admin powers
+            IEnumerable<DiscordServer> guilds =
+                JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server =>
+                    server.Permissions == 2147483647);
+            
+            return new(HttpStatusCode.OK, guilds);
+        }
+        catch (Exception e)
+        {
+            return new(HttpStatusCode.InternalServerError, e);
+        }
     }
     
     private async Task<string?> GetUserTokenFromDatabase(string id)
@@ -97,8 +127,7 @@ public class DashboardManager : IDashboardManager
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            throw new(e.Message);
         }
         finally
         {
