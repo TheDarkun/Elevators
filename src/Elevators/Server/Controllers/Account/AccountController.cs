@@ -11,17 +11,12 @@ namespace Server.Controllers.Account;
 public class AccountController : Controller, IAccountController
 {
     private IAccountManager Manager { get; }
-    public AccountController(IAccountManager manager)
-    {
-        Manager = manager;
-    }
+    public AccountController(IAccountManager manager) => Manager = manager;
     
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult Authorize()
-    {
-        return Redirect("https://discord.com/api/oauth2/authorize?client_id=1135226184217677926&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2FAccount%2FAuthenticate&response_type=code&scope=identify%20guilds%20guilds.members.read");
-    }
+    public IActionResult Authorize() =>
+        Redirect("https://discord.com/api/oauth2/authorize?client_id=1135226184217677926&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2FAccount%2FAuthenticate&response_type=code&scope=identify%20guilds%20guilds.members.read");
 
     [HttpGet]
     [AllowAnonymous]
@@ -55,56 +50,7 @@ public class AccountController : Controller, IAccountController
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
-    }
-
-    [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> GetJoinedServers()
-    {
-        try
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            if (identity == null)
-                return StatusCode(StatusCodes.Status401Unauthorized, "No Claims were found");
-
-            IEnumerable<Claim> claims = identity.Claims;
-            var id = claims.FirstOrDefault(c => c.Type == "Id")?.Value;
-
-            if (id is null)
-                return StatusCode(StatusCodes.Status401Unauthorized, "No Id was found");
-            
-            var servers = await Manager.GetJoinedServers(id);
-            return Ok(servers);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
-    }
-
-    [HttpGet("{guildId}")]
-    [Authorize]
-    public async Task<IActionResult> BotIsJoined(long guildId)
-    {
-        try
-        {
-            await Task.Delay(1000);
-            
-            var result = await Manager.BotIsJoined(guildId);
-
-            if (result)
-                return Ok();
-
-            return NotFound();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
     
@@ -131,7 +77,7 @@ public class AccountController : Controller, IAccountController
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(500);
         }
     }
 }

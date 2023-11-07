@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 using Server.Controllers.Account;
+using Server.Controllers.Dashboard;
 using Server.Controllers.Game;
 using Server.Managers.Account;
+using Server.Managers.Dashboard;
 using Server.Managers.Game;
 using Tailwind;
 
@@ -29,11 +31,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddSingleton<IAccountManager, AccountManager>();
 builder.Services.AddSingleton<IAccountController, AccountController>();
+builder.Services.AddSingleton<IAccountManager, AccountManager>();
 
-builder.Services.AddSingleton<IGameManager, GameManager>();
+builder.Services.AddSingleton<IDashboardController, DashboardController>();
+builder.Services.AddSingleton<IDashboardManager, DashboardManager>();
+
 builder.Services.AddSingleton<IGameController, GameController>();
+builder.Services.AddSingleton<IGameManager, GameManager>();
 
 builder.Services.AddTransient<MySqlConnection>(_ =>
     new MySqlConnection(builder.Configuration.GetConnectionString("Main")));

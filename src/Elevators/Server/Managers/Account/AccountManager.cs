@@ -24,72 +24,14 @@ public class AccountManager : IAccountManager
     
     public async Task<string> Authenticate(string code)
     {
-        try
-        {
-            // Get tuple of access token and a refresh token
-            var tokens = await GetDiscordTokens(code);
-            var jwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
-            
-            return jwtToken;
-        }
-        catch (Exception)
-        {
-            throw new();
-        }
+        // Get tuple of access token and a refresh token
+        var tokens = await GetDiscordTokens(code);
+        var jwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
+
+        return jwtToken;
     }
 
-    public async Task<bool> BotIsJoined(long guildId)
-    {
-        Client.DefaultRequestHeaders.Clear();
-        Client.DefaultRequestHeaders.Add("Authorization", $"Bot {Config.GetSection("Discord:BotToken").Value!}");
-        
-        var response = await Client.GetAsync($"https://discord.com/api/guilds/{guildId}");
-
-        // 200 - Bot is on the server
-        // 404 - Bot is NOT on the server
-        if (response.IsSuccessStatusCode)
-            return true;
-
-        return false;
-    }
-
-    public async Task<IEnumerable<DiscordServer>> GetJoinedServers(string id)
-    {
-        try
-        {
-            // Get discord token from jwtToken
-            var token = await GetUserTokenFromDatabase(id);
-
-            if (token is null)
-                throw new();
-
-            // Make a GET request in /users/@me/guilds
-            Client.DefaultRequestHeaders.Clear();
-            Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            var response = await Client.GetAsync("https://discord.com/api/users/@me/guilds");
-
-            var jsonContent = await response.Content.ReadAsStringAsync();
-
-            // Deserialize result to an Immutable Array of DiscordServers
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            };
-            
-            // Get only servers, where the user is either an owner or has admin permissions
-            IEnumerable<DiscordServer> result =
-                JsonSerializer.Deserialize<IEnumerable<DiscordServer>>(jsonContent, options)!.Where(server =>
-                    server.Permissions == 2147483647);
-
-            // Return the result
-            return result;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    
 
     public async Task Logout(string userId)
     {
@@ -111,33 +53,7 @@ public class AccountManager : IAccountManager
             await Connection.CloseAsync();
         }
     }
-
-    private async Task<string?> GetUserTokenFromDatabase(string id)
-    {
-        try
-        {
-            await Connection.OpenAsync();
-
-            await using var command = new MySqlCommand($"SELECT access_token from users WHERE user_id = '{id}'", Connection);
-            var result = await command.ExecuteScalarAsync();
-
-            if (result is null)
-                return null;
-
-            var token = result.ToString();
-            return token;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-        finally
-        {
-            await Connection.CloseAsync();
-        }
-    }
-
+    
     private async Task<(string, string)> GetDiscordTokens(string code)
     {
         var formData = new Dictionary<string, string>

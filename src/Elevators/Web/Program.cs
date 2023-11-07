@@ -14,8 +14,8 @@ builder.Services.AddSingleton<AuthenticationStateProvider, CustomAuthenticationS
 builder.Services.AddHttpClient("Elevators.ServerAPI",
     client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
-builder.Services.AddScoped<IHostingGameOnServerConnector, HostingGameOnServerConnector>();
-builder.Services.AddScoped<IServerListConnector, ServerListConnector>();
+builder.Services.AddScoped<IHostingGameOnServerConnector, HostingGameInGuildConnector>();
+builder.Services.AddScoped<IServerListConnector, GuildsConnector>();
 builder.Services.AddScoped<ILogoutConnector, LogoutConnector>();
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
