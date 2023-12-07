@@ -1,11 +1,9 @@
-﻿using System.Collections.Immutable;
-using Shared.Models;
+﻿using Server.Models;
 
 namespace Server.Managers.Account;
 
 public interface IAccountManager
 {
-    public Task<string> Authenticate(string code);
-
-    public Task Logout(string userId);
+    public Task<ManagerResult> Authenticate(string code);
+    public Task<ManagerResult>Logout(string userId);
 }

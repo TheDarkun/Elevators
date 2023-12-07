@@ -1,9 +1,10 @@
-﻿using System.Collections.Immutable;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
+using Server.Models;
 using Shared.Models;
 using static System.Text.Encoding;
 
@@ -22,18 +23,100 @@ public class AccountManager : IAccountManager
         Connection = connection;
     }
     
-    public async Task<string> Authenticate(string code)
+    public async Task<ManagerResult> Authenticate(string code)
     {
-        // Get tuple of access token and a refresh token
-        var tokens = await GetDiscordTokens(code);
-        var jwtToken = await CreateJwtToken(tokens.Item1, tokens.Item2);
+        try
+        {
+            #region Get tokens
+            var formData = new Dictionary<string, string>
+            {
+                { "client_id", Config.GetSection("Discord:AppId").Value!},
+                { "client_secret", Config.GetSection("Discord:AppSecret").Value!},
+                { "grant_type", "authorization_code" },
+                { "code", code },
+                { "redirect_uri", $"{Config.GetSection("Website:Url").Value!}api/Account/Authenticate"}
+            };
+            var formContent = new FormUrlEncodedContent(formData);
+            Client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
+            var response = await Client.PostAsync("https://discord.com/api/v10/oauth2/token", formContent);
 
-        return jwtToken;
+            if (!response.IsSuccessStatusCode)
+                return new (response.StatusCode, "There was an error retrieving discord token");
+            
+            var content = await response.Content.ReadAsStreamAsync();
+            var doc = await JsonDocument.ParseAsync(content);
+        
+            var accessToken = doc.RootElement.GetProperty("access_token").ToString();
+            var refreshToken = doc.RootElement.GetProperty("refresh_token").ToString();
+            #endregion
+
+            #region Get user from token
+            Client.DefaultRequestHeaders.Clear();
+            Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+            response = await Client.GetAsync("https://discord.com/api/users/@me");
+
+            var jsonContent = await response.Content.ReadAsStringAsync();
+        
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true,
+            };
+        
+            var user = JsonSerializer.Deserialize<DiscordUser>(jsonContent, options);
+            #endregion
+
+            #region Create JWT token
+            List<Claim> claims = new List<Claim>
+            {
+                new("Name", user!.Username ?? ""),
+                new("Id", user.Id ?? ""),
+                new("ExpiryTimeStamp", ((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds).ToString()),
+                new("Avatar", user.Avatar ?? "") //TODO: GIF, PNG, JPG
+            };
+        
+            var key = new SymmetricSecurityKey(UTF8.GetBytes(Config.GetSection("Auth:Token").Value!));
+        
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        
+            var jwtToken = new JwtSecurityToken
+            (
+                claims: claims,
+                expires: DateTime.Now.AddDays(7),
+                signingCredentials: creds
+            );
+            #endregion
+
+            #region Save user to database
+            try
+            {
+                await Connection.OpenAsync();
+
+                // Check if user isnt already in
+                await using var firstCommand = new MySqlCommand($"SELECT Count(*) FROM users WHERE user_id = '{user.Id}'", Connection);
+                var result = await firstCommand.ExecuteScalarAsync();
+
+                if (result == null || (long)result <= 0)
+                {
+                    // Add new values
+                    await using var command = new MySqlCommand($"INSERT INTO users VALUES ('{user.Id}', '{accessToken}', '{refreshToken}');", Connection);
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            finally
+            {
+                await Connection.CloseAsync();
+            }
+            #endregion
+            
+            return new(HttpStatusCode.OK, jwtToken);
+        }
+        catch (Exception e)
+        {
+            return new(HttpStatusCode.InternalServerError, e);
+        }
     }
-
-    
-
-    public async Task Logout(string userId)
+    public async Task<ManagerResult> Logout(string userId)
     {
         try
         {
@@ -42,116 +125,16 @@ public class AccountManager : IAccountManager
             // Remove user
             await using var command = new MySqlCommand($"DELETE FROM users WHERE user_id='{userId}'", Connection);
             await command.ExecuteNonQueryAsync();
+
+            return new(HttpStatusCode.OK);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            return new(HttpStatusCode.InternalServerError, e);
         }
         finally
         {
             await Connection.CloseAsync();
         }
-    }
-    
-    private async Task<(string, string)> GetDiscordTokens(string code)
-    {
-        var formData = new Dictionary<string, string>
-        {
-            { "client_id", Config.GetSection("Discord:AppId").Value!},
-            { "client_secret", Config.GetSection("Discord:AppSecret").Value!},
-            { "grant_type", "authorization_code" },
-            { "code", code },
-            { "redirect_uri", $"{Config.GetSection("Website:Url").Value!}api/Account/Authenticate"}
-        };
-        var formContent = new FormUrlEncodedContent(formData);
-        Client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
-        var response = await Client.PostAsync("https://discord.com/api/v10/oauth2/token", formContent);
-        var content = await response.Content.ReadAsStreamAsync();
-        var doc = await JsonDocument.ParseAsync(content);
-        
-        var accessToken = doc.RootElement.GetProperty("access_token").ToString();
-        var refreshToken = doc.RootElement.GetProperty("refresh_token").ToString();
-        return (accessToken, refreshToken);
-    }
-    private async Task<string> CreateJwtToken(string accessToken, string refreshToken)
-    {
-        var discordUser = await GetUserFromToken(accessToken);
-
-        if (discordUser is null)
-            throw new();
-        
-        List<Claim> claims = new List<Claim>
-        {
-            new("Name", discordUser.Username ?? ""),
-            new("Id", discordUser.Id ?? ""),
-            new("ExpiryTimeStamp", ((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds).ToString()),
-            new("Avatar", discordUser.Avatar ?? "") //TODO: GIF, PNG, JPG
-        };
-        
-        var key = new SymmetricSecurityKey(UTF8.GetBytes(Config.GetSection("Auth:Token").Value!));
-        
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-        
-        var jwtToken = new JwtSecurityToken
-        (
-            claims: claims,
-            expires: DateTime.Now.AddDays(7),
-            signingCredentials: creds
-        );
-
-        SaveUserToDatabase(discordUser.Id!, accessToken, refreshToken);
-        
-        var jwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-        
-        return jwt;
-    }
-    
-    private async void SaveUserToDatabase(string userId, string accessToken, string refreshToken)
-    {
-        try
-        {
-            await Connection.OpenAsync();
-
-            // Check if user isnt already in
-            await using var firstCommand = new MySqlCommand($"SELECT Count(*) FROM users WHERE user_id = '{userId}'", Connection);
-            var result = await firstCommand.ExecuteScalarAsync();
-
-            if (result is not null && (long)result > 0)
-                return;
-            
-            
-            // Add new values
-            await using var command = new MySqlCommand($"INSERT INTO users VALUES ('{userId}', '{accessToken}', '{refreshToken}');", Connection);
-            await command.ExecuteNonQueryAsync();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-        finally
-        {
-            await Connection.CloseAsync();
-        }
-    }
-
-    private async Task<DiscordUser?> GetUserFromToken(string token)
-    {
-        Client.DefaultRequestHeaders.Clear();
-        Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        var response = await Client.GetAsync("https://discord.com/api/users/@me");
-
-        var jsonContent = await response.Content.ReadAsStringAsync();
-        
-        JsonSerializerOptions options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-        };
-        
-        var result = JsonSerializer.Deserialize<DiscordUser>(jsonContent, options);
-        
-        return result;
     }
 }
