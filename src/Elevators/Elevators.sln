@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", ".\Server\Server.csproj", "{F51FFF64-6B3E-4AE2-A72F-BE3F66E1370C}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevators", "Elevators\Elevators.csproj", "{A1B811C9-88F4-4271-A007-1AA2B4984DCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", ".\Web\Web.csproj", "{CCEDF34E-FD4D-45C4-A391-03564A3A78C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevators.Client", "Elevators.Client\Elevators.Client.csproj", "{644EE3D8-45EB-4ED2-A43E-FB834BBC6EE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", ".\Shared\Shared.csproj", "{B9A186C4-355B-415B-B3AA-C2ABC366ECB6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discord", ".\Discord\Discord.csproj", "{D4D8DA48-3976-4119-9812-5F01664FB773}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevators.Bot", "Elevators.Bot\Elevators.Bot.csproj", "{3072173F-1BA9-4E31-A467-41AD8A66F3BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,21 +15,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F51FFF64-6B3E-4AE2-A72F-BE3F66E1370C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F51FFF64-6B3E-4AE2-A72F-BE3F66E1370C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F51FFF64-6B3E-4AE2-A72F-BE3F66E1370C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F51FFF64-6B3E-4AE2-A72F-BE3F66E1370C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCEDF34E-FD4D-45C4-A391-03564A3A78C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCEDF34E-FD4D-45C4-A391-03564A3A78C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCEDF34E-FD4D-45C4-A391-03564A3A78C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCEDF34E-FD4D-45C4-A391-03564A3A78C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9A186C4-355B-415B-B3AA-C2ABC366ECB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9A186C4-355B-415B-B3AA-C2ABC366ECB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9A186C4-355B-415B-B3AA-C2ABC366ECB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9A186C4-355B-415B-B3AA-C2ABC366ECB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4D8DA48-3976-4119-9812-5F01664FB773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4D8DA48-3976-4119-9812-5F01664FB773}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4D8DA48-3976-4119-9812-5F01664FB773}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4D8DA48-3976-4119-9812-5F01664FB773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B811C9-88F4-4271-A007-1AA2B4984DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B811C9-88F4-4271-A007-1AA2B4984DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B811C9-88F4-4271-A007-1AA2B4984DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B811C9-88F4-4271-A007-1AA2B4984DCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{644EE3D8-45EB-4ED2-A43E-FB834BBC6EE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{644EE3D8-45EB-4ED2-A43E-FB834BBC6EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{644EE3D8-45EB-4ED2-A43E-FB834BBC6EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{644EE3D8-45EB-4ED2-A43E-FB834BBC6EE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3072173F-1BA9-4E31-A467-41AD8A66F3BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3072173F-1BA9-4E31-A467-41AD8A66F3BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3072173F-1BA9-4E31-A467-41AD8A66F3BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3072173F-1BA9-4E31-A467-41AD8A66F3BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D022A43-B080-4D6F-A43A-CAF2C78F453D}
 	EndGlobalSection
 EndGlobal
