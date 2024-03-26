@@ -1,0 +1,21 @@
+﻿@using MudBlazor
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+@inherits LayoutComponentBase
+
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudAppBar Color="Color.Primary" Fixed="false">
+    <MudText Typo="Typo.h5">©Elevators 2024</MudText>
+    <MudSpacer />
+    <a href="https://github.com/TheDarkun/Elevators"><MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" /></a>
+</MudAppBar>
+
+@code {
+    
+}
+
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
