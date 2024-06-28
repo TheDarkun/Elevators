@@ -233,3 +233,7 @@ FakesAssemblies/
 .idea/
 .idea/
 *.xml
+
+package-lock.json
+app.min.css
+db.sqlite

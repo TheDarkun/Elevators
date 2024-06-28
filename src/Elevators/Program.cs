@@ -1,4 +1,6 @@
 using Elevators.Components;
+using Elevators.Database;
+using Microsoft.Data.Sqlite;
 using MudBlazor.Services;
 using Tailwind;
 
@@ -9,6 +11,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+builder.Services.AddTransient(x => new SqliteConnection("Data Source=db.sqlite"));
+builder.Services.AddSingleton<IDataAccess, DataAccess>();
 
 var app = builder.Build();
 
