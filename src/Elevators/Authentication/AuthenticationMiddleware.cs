@@ -65,12 +65,12 @@ public class AuthenticationMiddleware(
             { "client_secret", config["clientSecret"]! },
             { "grant_type", "authorization_code" },
             { "code", code },
-            { "redirect_uri", config["redirectUri"]! }
+            { "redirect_uri", config["uri:redirect"]! }
         };
 
         logger.LogInformation(
             "Getting access token using \nclient_id as {ClientId} \nclient_secret as {ClientSecret} \ncode as {Code} \nredirect_uri as {RedirectUri}",
-            config["clientId"], config["clientSecret"], code, config["redirectUri"]);
+            config["clientId"], config["clientSecret"], code, config["uri:redirect"]);
 
         var formContent = new FormUrlEncodedContent(formData);
         var response = await client.PostAsync("oauth2/token", formContent);

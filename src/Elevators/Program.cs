@@ -1,3 +1,4 @@
+global using Microsoft.AspNetCore.Components;
 using Elevators;
 using Elevators.Authentication;
 using Elevators.Components;
