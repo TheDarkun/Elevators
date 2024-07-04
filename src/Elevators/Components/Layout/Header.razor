@@ -9,7 +9,7 @@
     <MudSpacer/>
     <AuthorizeView>
         <Authorized>
-            <p>@context.User.Identity?.Name!</p>
+            <p>@AccountState.DisplayName</p>
         </Authorized>
         <NotAuthorized>
             <MudButton Href=@Configuration["uri:oauth2"] Variant="Variant.Filled" Color="Color.Dark" DisableElevation>
