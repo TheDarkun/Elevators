@@ -9,4 +9,8 @@ public partial class Header
     
     [CascadingParameter] 
     public AccountState AccountState { get; set; } = null!;
+    
+    private bool _open;
+
+    private void ToggleOpen() => _open = !_open;
 }
