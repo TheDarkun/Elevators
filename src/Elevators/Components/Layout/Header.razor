@@ -9,7 +9,7 @@
     <MudSpacer/>
     <AuthorizeView>
         <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@ToggleOpen">@AccountState.DisplayName</MudButton>
+            <MudButton Color="Color.Inherit" OnClick="@ToggleOpen" @onfocusout="@ToggleOpen"><MudText Typo="Typo.h6">@AccountState.DisplayName</MudText></MudButton>
             <div class="right-0 mt-6">
             <MudPopover Open="@_open" Fixed="false" Class="px-4 pt-4">
                 <div class="d-flex flex-column text-center">
@@ -20,7 +20,7 @@
                         <MudText>Log Out</MudText>
                     </MudButton>
                     
-                    <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-b3 mb-1" Color="Color.Error">Close</MudButton>
+                    
                 </div>
             </MudPopover>
             </div>
