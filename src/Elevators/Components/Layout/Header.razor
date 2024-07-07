@@ -9,15 +9,15 @@
     <MudSpacer/>
     <AuthorizeView>
         <Authorized>
-            <MudButton Color="Color.Inherit" OnClick="@ToggleOpen" @onfocusout="@ToggleOpen"><MudText Typo="Typo.h6">@AccountState.DisplayName</MudText></MudButton>
+            <MudButton Color="Color.Inherit" OnClick="@ToggleOpen" @onfocusout="@ToggleOpen"><MudText Typo="Typo.h6">@AccountState.DisplayName</MudText><MudImage Src="@AccountState.Avatar"/></MudButton>
             <div class="right-0 mt-6">
-            <MudPopover Open="@_open" Fixed="false" Class="px-4 pt-4">
+            <MudPopover Open="@_open" Fixed="false" Class="px-4 pt-4" Style="background-color: rgb(66,66,66)">
                 <div class="d-flex flex-column text-center">
                     <MudButton Href="/">
-                        <MudText>View Profile</MudText>
+                        <MudText Typo="Typo.h6">View Profile</MudText>
                     </MudButton>
                     <MudButton Href="/">
-                        <MudText>Log Out</MudText>
+                        <MudText Typo="Typo.h6">Log Out</MudText>
                     </MudButton>
                     
                     
