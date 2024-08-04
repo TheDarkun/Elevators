@@ -1,4 +1,4 @@
-﻿@page "/Exception404"
+﻿@page "/*{route}:nonfile"
 
 
 <MudText Typo="Typo.h2" Align="Align.Center" Style="font-weight: bold;">Oops.. looks like we <span class="text-indigo-500">can't find</span> this page.</MudText>
@@ -8,5 +8,7 @@
 
 
 @code {
-    
+    // this captures all unmatched URL paths that do not correspond to any physical file on the server
+    [Parameter]
+    public string? Route { get; set; } 
 }
