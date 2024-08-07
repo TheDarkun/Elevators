@@ -78,6 +78,7 @@ else
 }
 
 app.UseMiddleware<AuthenticationMiddleware>();
+app.UseMiddleware<LogoutMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
