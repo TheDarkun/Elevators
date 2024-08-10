@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 
-namespace Elevators.Components.Layout;
+namespace Elevators.Web.Layout;
 
 public partial class MainLayout
 {

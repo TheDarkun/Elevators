@@ -1,9 +1,10 @@
 ﻿using Elevators.State;
 
-namespace Elevators.Components.Layout;
+namespace Elevators.Web.Layout;
 
 public partial class Header
 {
+    
     [Inject] 
     public IConfiguration Configuration { get; set; } = null!;
     
@@ -13,4 +14,5 @@ public partial class Header
     private bool _open;
 
     private void ToggleOpen() => _open = !_open;
+    
 }
