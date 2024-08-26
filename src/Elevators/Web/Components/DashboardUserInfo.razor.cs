@@ -15,4 +15,5 @@ public partial class DashboardUserInfo
 
     private void ToggleOpen() => _open = !_open;
     
+    
 }

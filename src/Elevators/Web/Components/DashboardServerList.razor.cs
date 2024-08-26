@@ -15,4 +15,5 @@ public partial class DashboardServerList
 
     private void ToggleOpen() => _open = !_open;
     
+
 }
