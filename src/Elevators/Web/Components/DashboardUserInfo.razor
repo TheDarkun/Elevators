@@ -1,18 +1,15 @@
-﻿<div class="rounded-2xl bg-gray-800 mb-24">
+﻿<div class="rounded-2xl bg-gray-800 w-1/6">
     <table>
         <tr>
-            <td><MudImage Class="ml-1 rounded-3xl border-b float-left" style="column-span: 2" Src=@($"https://cdn.discordapp.com/avatars/{AccountState.Id}/{AccountState.Avatar}.webp?size=128")/></td>
-        </tr>
-        <tr>
-            <td><MudText Typo="Typo.h4" Class="text-white">Skibidi</MudText></td>
-            <td><MudText Typo="Typo.h5" Class="text-gray-500">skibidi1337</MudText></td>
+            
+            <th><MudImage Class="ml-1 rounded-3xl border-b float-left" style="row-span: 2" Src=@($"https://cdn.discordapp.com/avatars/{AccountState.Id}/{AccountState.Avatar}.webp?size=128")/></th>
+            <td><MudText Typo="Typo.h4" Class="text-white">Skibidi</MudText><br>
+                <MudText Typo="Typo.h5" Class="text-gray-500 float-right">skibidi1337</MudText></td>
         </tr>
     </table>
-
-    
 </div>
 
-<div class="rounded-2xl bg-gray-800 text-center">
+<div class="rounded-2xl bg-gray-800 text-center w-1/6">
     <MudText Typo="Typo.h4">Games</MudText>
     <MudText Typo="Typo.h5" Class="text-gray-800 float-left"><span class="text-white">8</span> wins</MudText>
     <MudText Typo="Typo.h5" Class="text-gray-800 float-right"><span class="text-white">4</span> losses</MudText>
