@@ -1,4 +1,4 @@
-﻿<MudAppBar Color="Color.Dark" Fixed="false">
+<MudAppBar Color="Color.Dark" Fixed="false">
     <MudButton Href="/" Variant="Variant.Filled" Color="Color.Dark" DisableElevation>
         <MudText Typo="Typo.h6">Home</MudText>
     </MudButton>
@@ -9,7 +9,7 @@
     <MudSpacer/>
     <AuthorizeView>
         <Authorized>
-            <MudButton Color="Color.Inherit" OnClick="@ToggleOpen" @onfocusout="@ToggleOpen"><MudText Typo="Typo.h6">@AccountState.DisplayName</MudText><MudImage Class="ml-1 rounded-3xl" Src=@($"https://cdn.discordapp.com/avatars/{AccountState.Id}/{AccountState.Avatar}.webp?size=32")/></MudButton>
+            <MudButton Color="Color.Inherit" OnClick="@ToggleOpen"><MudText Typo="Typo.h6">@AccountState.DisplayName</MudText><MudImage Class="ml-1 rounded-3xl" Src=@($"https://cdn.discordapp.com/avatars/{AccountState.Id}/{AccountState.Avatar}.webp?size=32")/></MudButton>
             <div class="right-0 mt-9">
             <MudPopover Open="@_open" Fixed="false" Class="px-4" Style="background-color: rgb(66,66,66)">
                 <div class="d-flex flex-column text-center">
@@ -17,9 +17,7 @@
                         
                         <MudText Typo="Typo.h6" Style="color: white;"><MudIcon Icon="@Icons.Material.Filled.DoorFront" Color="Color.Surface"></MudIcon>View Profile</MudText>
                     </MudButton>
-                    <MudButton Href="/">
-                        <MudText Typo="Typo.h6" Style="color: white;"><MudIcon Icon="@Icons.Material.Filled.Logout" Color="Color.Primary"></MudIcon>Log Out</MudText>
-                    </MudButton>
+                    <LogoutButton/>
                     
                     
                 </div>
