@@ -1,0 +1,13 @@
+﻿@page "/{*route:nonfile}"
+
+<MudText Typo="Typo.h2" Align="Align.Center" Style="font-weight: bold;">Oops.. looks like we <span class="text-indigo-500">can't find</span> this page.</MudText>
+<MudText Typo="Typo.h3" Align="Align.Center" Style="font-weight: bold;" >Try redirecting to the <a class="text-indigo-500" href="/">Home Page</a> to try again!</MudText>
+
+<MudCard><img src="images/undraw_page_not_found_re_e9o6.svg" class="bg-gray-800 w-96 h-96 mt-36 m-auto"></MudCard>
+
+
+@code {
+    // this captures all unmatched URL paths that do not correspond to any physical file on the server
+    [Parameter]
+    public string? Route { get; set; } 
+}
