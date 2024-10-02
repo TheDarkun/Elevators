@@ -1,9 +1,10 @@
-﻿using Elevators.State;
+using Elevators.State;
+    
+namespace Elevators.Web.Components;
 
-namespace Elevators.Components.Layout;
-
-public partial class Header
+public partial class DashboardUserInfo
 {
+    
     [Inject] 
     public IConfiguration Configuration { get; set; } = null!;
     
@@ -13,4 +14,6 @@ public partial class Header
     private bool _open;
 
     private void ToggleOpen() => _open = !_open;
+    
+    
 }

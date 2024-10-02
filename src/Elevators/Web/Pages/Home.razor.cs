@@ -1,4 +1,4 @@
-﻿namespace Elevators.Components.Pages;
+﻿namespace Elevators.Web.Pages;
 
 public partial class Home
 {

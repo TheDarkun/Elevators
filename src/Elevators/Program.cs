@@ -1,7 +1,7 @@
 global using Microsoft.AspNetCore.Components;
 using Elevators;
 using Elevators.Authentication;
-using Elevators.Components;
+using Elevators.Web;
 using Elevators.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
