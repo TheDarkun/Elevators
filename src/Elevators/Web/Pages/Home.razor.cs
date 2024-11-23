@@ -1,7 +1,11 @@
-﻿namespace Elevators.Web.Pages;
+﻿using Elevators.Store.Configuration;
+using Fluxor;
+using Microsoft.AspNetCore.Components;
+
+namespace Elevators.Web.Pages;
 
 public partial class Home
 {
-    [Inject] 
-    public IConfiguration Configuration { get; set; } = null!;
+    [Inject]
+    public IState<ConfigurationState> ConfigurationState { get; set; } = null!;
 }

@@ -1,35 +1,41 @@
 ﻿@page "/"
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<PageTitle>Elevators | Home</PageTitle>
 
-<PageTitle>Home</PageTitle>
+<main class="flex flex-col p-40 gap-40">
 
-<div class="flex flex-col mt-4 mb-4">
-    <MudText Typo="Typo.h3" Align="Align.Center" Style="font-weight: bold;">Elevate to the highest <span class="text-indigo-500">points</span>!</MudText>
-    <MudText Typo="Typo.h6" Align="Align.Center" Style="@($"color:{Colors.Grey.Lighten1}")">With our Elevators bot, you will experience<br>unforgettable games with all your friends<br></MudText>
-    <MudButton Href=@Configuration["uri:bot"] Variant="Variant.Filled" Color="Color.Primary" Class="!m-auto block text-lg rounded-2xl w-1/6 h-9" Size="Size.Large">Add to Discord</MudButton>
 
-    <MudCard class="flex flex-row mt-4 mb-4 justify-between">
-        <MudCard><img src="images/undraw_spreadsheet_re_cn18.svg" class="bg-gray-800 w-96 h-96 ml-96 p-10"></MudCard>
-        <MudText Typo="Typo.h4" Style="@($"color:{Colors.Grey.Lighten1}")" Class="text-center float-right !mr-96 !mt-28">Easily organize events based<br>on popular text based game<br>Elevators</MudText>
-    </MudCard>
+    <div class="flex flex-col items-center gap-4">
+        <MudText Typo="Typo.h1" Align="Align.Center">Elevate to the<br> highest <span style="color: var(--mud-palette-primary)">points</span>!</MudText>
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="opacity-50">With our Elevators bot, you will experience<br>unforgettable games with all your friends<br></MudText>
+        <MudButton Href="@ConfigurationState.Value.BotUri" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Add to Discord</MudButton>
+    </div>
 
-    <Mudcard class="flex flex-row mt-4 mb-4 justify-between">
-        <MudText Typo="Typo.h4" Style="@($"color:{Colors.Grey.Lighten1}")" Class="text-center float-left !ml-96 !mt-28">Have a full overview of<br>people who are playing and<br>their actions</MudText>
-        <MudCard><img src="images/undraw_programming_re_kg9v.svg" class="bg-gray-800 w-96 h-96 mr-96 float-right p-10"></MudCard>
-    </Mudcard>
+    <div class="flex items-center justify-center gap-24">
+        <MudCard Outlined="true" class="!rounded-2xl">
+            <img src="images/undraw_spreadsheet_re_cn18.svg" class="w-96 h-96 p-10">
+        </MudCard>
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="opacity-50">Easily organize events based<br>on popular text based game<br>Elevators</MudText>
+    </div>
 
-    <MudCard class="flex flex-row mt-4 mb-4 justify-between">
-        <MudCard><img src="images/discord-icon.svg" class="bg-gray-800 w-96 h-96 ml-96 p-10"></MudCard>
-        <MudText Typo="Typo.h4" Style="@($"color:{Colors.Grey.Lighten1}")" Class="!mr-96 !mt-36 text-center block">Have a full overview of<br>people who are playing and<br>their actions</MudText>
-    </MudCard>
-</div>
+    <div class="flex items-center justify-center gap-24">
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="opacity-50">Have a full overview of<br>people who are playing and<br>their actions</MudText>
+        <MudCard Outlined="true" class="!rounded-2xl">
+            <img src="images/undraw_programming_re_kg9v.svg" class="w-96 h-96 p-10">
+        </MudCard>
+    </div>
 
-<div class="text-center">
-<MudText Typo="Typo.h4">Interested in learning more?</MudText>
-    
-<MudButton Variant="Variant.Filled" Color="Color.Dark" Href="/Faq" Size="Size.Large">Checkout FAQ</MudButton>
-</div>
+    <div class="flex items-center justify-center gap-24">
+        <MudCard Outlined="true" class="!rounded-2xl">
+            <img src="images/discord-icon.svg" class="w-96 h-96 p-10">
+        </MudCard>
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="opacity-50">Have a full overview of<br>people who are playing and<br>their actions</MudText>
+    </div>
 
-<br/>
-<br/><br/><br/><br/><br/>
-<br/>
-<br/><br/>
+    <div class="flex flex-col items-center gap-4">
+        <MudText Typo="Typo.h4" Class="opacity-50">Interested in learning more?</MudText>
+
+        <MudButton Href="faq" Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Checkout FAQ</MudButton>
+    </div>
+</main>
+

@@ -1,0 +1,22 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<div>
+    <MudButton Color="Color.Inherit" OnClick="@ToggleOpen">
+        @if (UserState.Value.IsLoading)
+        {
+            <MudText Typo="Typo.h6">Username</MudText><MudImage Class="ml-2 rounded-3xl w-8 h-8" Src="images/avatar.png"/>
+        }
+        else
+        {
+            <MudText Typo="Typo.h6">@UserState.Value.Username</MudText><MudImage Class="ml-1 rounded-3xl w-8 h-8" Src=@($"https://cdn.discordapp.com/avatars/{UserState.Value.Id}/{UserState.Value.Avatar}.webp?size=32")/>
+        }
+    </MudButton>
+    <MudPopover Open="@_open" Fixed="true" AnchorOrigin="Origin.BottomRight">
+        <div class="d-flex flex-column text-center">
+            <MudButton StartIcon="@Icons.Material.Filled.Dashboard" Href="/dashboard">
+                <MudText Typo="Typo.h6" >Dashboard</MudText>
+            </MudButton>
+            <LogoutButton/>
+        </div>
+    </MudPopover>
+</div>

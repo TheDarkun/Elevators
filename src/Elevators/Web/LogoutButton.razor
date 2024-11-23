@@ -1,16 +1,6 @@
 ﻿@page "/logout"
 @inject NavigationManager Navigation
-@rendermode InteractiveServer
 
-<MudButton OnClick="@Logout">
-    <MudText Typo="Typo.h6" Style="color: white;">
-        <MudIcon Icon="@Icons.Material.Filled.Logout" Color="Color.Primary"></MudIcon>Log Out
-    </MudText>
+<MudButton StartIcon="@Icons.Material.Filled.Logout" onClick="@Logout">
+    <MudText Typo="Typo.h6" >Logout</MudText>
 </MudButton>
-
-@code{
-    private void Logout()
-    {
-        Navigation.NavigateTo("/logout", forceLoad: true);
-    }
-}

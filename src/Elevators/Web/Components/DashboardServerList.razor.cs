@@ -1,5 +1,6 @@
 ﻿using Elevators.State;
-    
+using Microsoft.AspNetCore.Components;
+
 namespace Elevators.Web.Components;
 
 public partial class DashboardServerList
@@ -8,8 +9,6 @@ public partial class DashboardServerList
     [Inject] 
     public IConfiguration Configuration { get; set; } = null!;
     
-    [CascadingParameter] 
-    public AccountState AccountState { get; set; } = null!;
     
     private bool _open;
 

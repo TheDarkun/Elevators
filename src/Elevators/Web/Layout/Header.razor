@@ -1,5 +1,8 @@
-<MudAppBar Color="Color.Dark" Fixed="false">
-    <MudButton Href="/" Variant="Variant.Filled" Color="Color.Dark" DisableElevation>
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@rendermode InteractiveWebAssembly
+<MudAppBar Elevation="0" Style="background: var(--mud-palette-surface);" Class="!border-b-[var(--mud-palette-lines-default)] !border-b-[1px]" Fixed="false">
+
+    <MudButton Href="/" Variant="Variant.Text" DisableElevation>
         <MudText Typo="Typo.h6">Home</MudText>
     </MudButton>
     <MudSpacer/>
@@ -7,28 +10,15 @@
         <b>Elevators</b>
     </MudText>
     <MudSpacer/>
+
     <AuthorizeView>
         <Authorized>
-            <MudButton Color="Color.Inherit" OnClick="@ToggleOpen"><MudText Typo="Typo.h6">@AccountState.DisplayName</MudText><MudImage Class="ml-1 rounded-3xl" Src=@($"https://cdn.discordapp.com/avatars/{AccountState.Id}/{AccountState.Avatar}.webp?size=32")/></MudButton>
-            <div class="right-0 mt-9">
-            <MudPopover Open="@_open" Fixed="false" Class="px-4" Style="background-color: rgb(66,66,66)">
-                <div class="d-flex flex-column text-center">
-                    <MudButton Href="/">
-                        
-                        <MudText Typo="Typo.h6" Style="color: white;"><MudIcon Icon="@Icons.Material.Filled.DoorFront" Color="Color.Surface"></MudIcon>View Profile</MudText>
-                    </MudButton>
-                    <LogoutButton/>
-                    
-                    
-                </div>
-            </MudPopover>
-            </div>
+            <HeaderDropdown/>
         </Authorized>
         <NotAuthorized>
-            <MudButton Href=@Configuration["uri:oauth2"] Variant="Variant.Filled" Color="Color.Dark" DisableElevation>
+            <MudButton Href="@ConfigurationState.Value.Oauth2Uri" Variant="Variant.Text" DisableElevation>
                 <MudText Typo="Typo.h6">Sign In</MudText>
             </MudButton>
         </NotAuthorized>
     </AuthorizeView>
-
 </MudAppBar>

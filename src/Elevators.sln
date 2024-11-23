@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevators", "Elevators\Elevators.csproj", "{DAF1690B-39A9-49DD-9171-F722C5DAFE9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevators.Api", "Elevators.Api\Elevators.Api.csproj", "{C01A82E2-0945-4361-8E79-54DB44B94374}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DAF1690B-39A9-49DD-9171-F722C5DAFE9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAF1690B-39A9-49DD-9171-F722C5DAFE9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAF1690B-39A9-49DD-9171-F722C5DAFE9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C01A82E2-0945-4361-8E79-54DB44B94374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C01A82E2-0945-4361-8E79-54DB44B94374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C01A82E2-0945-4361-8E79-54DB44B94374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C01A82E2-0945-4361-8E79-54DB44B94374}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
