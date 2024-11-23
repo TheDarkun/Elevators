@@ -1,61 +1,14 @@
-﻿@* <table class="w-full"> *@
-@*     <tr> *@
-@*         <td> *@
-@*             <div class="rounded-2xl bg-gray-900 w-2/3 p-5"> *@
-@*                 <table> *@
-@*                     <tr> *@
-@*                         <th><MudImage Class="ml-1 rounded-full border-b float-left" style="row-span: 2" Src=@($"https://cdn.discordapp.com/avatars/{AccountState.Id}/{AccountState.Avatar}.webp?size=128")/></th> *@
-@*                         <td><MudText Typo="Typo.h4" Class="text-white">Skibidi</MudText><br> *@
-@*                             <MudText Typo="Typo.h5" Class="text-gray-500 float-right">skibidi1337</MudText></td> *@
-@*                     </tr> *@
-@*                 </table> *@
-@*             </div> *@
-@*         </td> *@
-@*          *@
-@*         <td class="bg-gray-900 p-5 rounded-2xl m-10"> *@
-@*             <div class="text-center "> *@
-@*                 <MudText Typo="Typo.h4" Class="text-white">Games</MudText> *@
-@*                 <MudProgressLinear Color="Color.Success" Size="Size.Large" Rounded="true" Value="66" /> *@
-@*                  *@
-@*                 <MudText Typo="Typo.h5" Class="text-gray-500 float-left"><span class="text-white">8</span> wins</MudText> *@
-@*                 <MudText Typo="Typo.h5" Class="text-gray-500 float-right"><span class="text-white">4</span> losses</MudText> *@
-@*              *@
-@*             </div> *@
-@*         </td> *@
-@*     </tr> *@
-@*     <tr> *@
-@*         <br/> *@
-@*     </tr> *@
-@*      *@
-@*     <tr> *@
-@*         <td class="bg-gray-900 rounded-2xl flex justify-center content-center items-center">         *@
-@*             <div class="w-1/6 float-left text-center"> *@
-@*                  *@
-@*                 <MudCard><img src="images/star.svg" class="bg-gray-900 p-10 m-auto"></MudCard> *@
-@*                 <MudText Typo="Typo.h5" Class="text-white"><span class="text-gray-500">Level</span> 69</MudText> *@
-@* *@
-@*             </div> *@
-@*                          *@
-@*                 <div class="w-2/3 text-center float-right"> *@
-@*                     <MudText Typo="Typo.h4" Class="text-white"> *@
-@*                         Rank *@
-@*                     </MudText> *@
-@*                         <MudProgressLinear Color="Color.Warning" Size="Size.Large" Rounded="true" Value="66" /> *@
-@*                         <div class="w-1/2 rounded-2xl bg-yellow-500"></div> *@
-@*                         <div class="w-1/2 rounded-2xl bg-gray-800"></div> *@
-@*                     <div class="flex justify-between"> *@
-@*                         <MudText Typo="Typo.h5" Class="text-white">5,000<span class="text-gray-500">XP</span></MudText> *@
-@*                         <MudText Typo="Typo.h5" Class="text-white">6,500<span class="text-gray-500">XP</span></MudText> *@
-@*                         <MudText Typo="Typo.h5" Class="text-white">8,000<span class="text-gray-500">XP</span></MudText> *@
-@*                     </div> *@
-@*                     </div> *@
-@* *@
-@*         </td> *@
-@*     </tr> *@
-@* *@
-@* *@
-@* *@
-@* *@
-@* *@
-@* </table> *@
-@* *@
+﻿<section class="flex gap-8">
+    <MudCard Outlined="true" Class="flex h-fit p-8 !rounded-2xl mt-8 gap-8 items-center justify-center">
+        <MudImage Class="h-20 rounded-xl" Src="images/avatar.png"></MudImage>
+        <div>
+            <MudText Typo="Typo.h3">Welcome</MudText>
+            <MudText Typo="Typo.h4">darkun68</MudText>
+        </div>
+    </MudCard>
+
+    <MudCard Outlined="true" Class="flex h-fit p-8 !rounded-2xl mt-8 gap-8 items-center justify-center">
+        <MudImage Class="h-20 rounded-xl" Src="images/avatar.png"></MudImage>
+        <MudProgressLinear Indeterminate="true" Class="!w-16 ananas" ></MudProgressLinear>
+    </MudCard>
+</section>

@@ -1,6 +1,7 @@
-﻿using Fluxor;
+﻿using Elevators.Store.User.Actions;
+using Fluxor;
 
-namespace Elevators.Store.User.Actions;
+namespace Elevators.Store.User;
 
 public class UserEffects(ApiClient apiClient)
 {

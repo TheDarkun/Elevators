@@ -1,14 +1,20 @@
 ﻿@page "/dashboard"
-
-<div class="w-2/3">
-    <DashboardServerList></DashboardServerList>
-</div>
+@page "/dashboard/{id:long}"
 
 
+<main style="height: calc(100vh - 8.1rem)" class="flex">
+    <DashboardServerList/>
+    @if (Id is null)
+    {
+        <DashboardUserInfo></DashboardUserInfo>
+    }
+    else
+    {
+        <DashboardGuild/> 
+    }
+</main>
 
-
-<div class="w-[84%] m-10 bg-gray-800 float-right">
-<DashboardUserInfo></DashboardUserInfo>
-</div>
-
-
+@code {
+    [Parameter] 
+    public long? Id { get; set; } // Nullable integer for optional parameter
+}

@@ -1,7 +1,6 @@
 {
   "name": "elevators",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "tailwind": "npx tailwindcss -i ./wwwroot/app.css -o ./wwwroot/app.min.css --minify --watch"
@@ -10,5 +9,7 @@
   "license": "ISC",
   "devDependencies": {
     "tailwindcss": "^3.4.1"
-  }
+  },
+  "keywords": [],
+  "description": ""
 }

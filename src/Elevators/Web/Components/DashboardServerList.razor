@@ -1,18 +1,27 @@
-﻿
-    <div class="w-1/6 bg-gray-800 text-center float-left">
-        @* <MudImage Class="m-auto rounded-full" Src=@($"https://cdn.discordapp.com/avatars/{AccountState.Id}/{AccountState.Avatar}.webp?size=128")/> *@
-        <hr/>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-        <MudPaper Class="pa-8 ma-2" Elevation="3"></MudPaper>
-    </div>
-
-
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<MudCard Outlined="true" Class="w-24 flex flex-col overflow-scroll gap-4 p-4 m-8 !rounded-2xl" style="height: calc(100vh - 12.2rem)">
+    @if (UserState.Value.IsLoading)
+    {
+        <MudImage @onclick="_ => HandleGuildClick(0)" Class="rounded-full cursor-pointer" Src="images/avatar.png"/>
+    }
+    else
+    {
+        <MudImage @onclick="_ => HandleGuildClick(0)" class="rounded-full cursor-pointer" Src=@($"https://cdn.discordapp.com/avatars/{UserState.Value.Id}/{UserState.Value.Avatar}.webp?size=256")/>
+    }
+    <MudDivider></MudDivider>
+    @if (GuildState.Value.IsLoading)
+    {
+        <p>...</p>
+    }
+    else
+    {
+        foreach (var guild in GuildState.Value.Guilds)
+        {
+            <GuildIcon OnImageClick="(guildId => HandleGuildClick(guildId))" Guild="guild"/>
+        }
+    }
+    
+</MudCard>
 
 
 
