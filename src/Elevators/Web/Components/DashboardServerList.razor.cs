@@ -13,7 +13,7 @@ public partial class DashboardServerList
     public IState<UserState> UserState { get; set; } = null!;
     
     [Inject]
-    public IState<GuildsState> GuildState { get; set; } = null!;
+    public IState<GuildListState> GuildState { get; set; } = null!;
 
     [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
@@ -21,7 +21,7 @@ public partial class DashboardServerList
     {
         base.OnInitialized();
         if (GuildState.Value.Guilds == null)
-            Dispatcher.Dispatch(new FetchGuildsAction());
+            Dispatcher.Dispatch(new FetchGuildListAction());
     }
 
     [Inject]

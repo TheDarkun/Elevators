@@ -12,7 +12,7 @@
     -ms-overflow-style: none !important;  /* IE and Edge */
     scrollbar-width: none !important;  /* Firefox */
 
-    --mud-palette-action-default: green !important;
-    --mud-palette-action-disabled: red !important
+    /*--mud-palette-action-default: green !important;*/
+    /*--mud-palette-action-disabled: red !important*/
 }
 

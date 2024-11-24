@@ -28,7 +28,7 @@ builder.Services.AddFluxor(options =>
     options.ScanAssemblies(currentAssembly);
     options.UseReduxDevTools();
 });
-builder.Services.AddOptions();
+// builder.Services.AddOptions();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 builder.Services.AddAuthorizationCore();
 

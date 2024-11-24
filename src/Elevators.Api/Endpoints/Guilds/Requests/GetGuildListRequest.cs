@@ -2,7 +2,7 @@
 
 namespace Elevators.Api.Endpoints.Guilds.Requests;
 
-public class GetGuildsRequest
+public class GetGuildListRequest
 {
     [FromClaim]
     public Guid SessionId { get; set; }

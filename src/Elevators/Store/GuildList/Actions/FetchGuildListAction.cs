@@ -1,3 +1,3 @@
 ﻿namespace Elevators.Store.Guilds.Actions;
 
-public record FetchGuildsAction;
+public record FetchGuildListAction;

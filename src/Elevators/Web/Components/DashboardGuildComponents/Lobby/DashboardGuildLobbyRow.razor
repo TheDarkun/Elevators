@@ -1,0 +1,24 @@
+﻿<tr>
+    <td>
+        <MudImage Class="w-12 h-12 rounded-xl" Src="images/avatar.png"></MudImage>
+    </td>
+    <td>
+        <MudText>darkun68</MudText>
+    </td>
+    <td>
+        <MudToggleIconButton @bind-Toggled="@_open" Icon="@Icons.Material.Filled.ArrowDropDown" Color="Color.Primary" ToggledIcon="@Icons.Material.Filled.ArrowDropUp" ToggledColor="Color.Primary" />
+        <MudPopover AnchorOrigin="Origin.CenterLeft" Open="@_open" Fixed="true" Class="p-2" Style="margin-top: 1.5rem; margin-left: -2.5rem">
+            <div class="d-flex flex-column">
+                <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.Close" Color="Color.Error">Kick</MudButton>
+                <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.Hardware" Color="Color.Error">Ban</MudButton>
+                
+            </div>
+        </MudPopover>
+    </td>
+</tr>
+
+@code{
+    private bool _open;
+
+    private void ToggleOpen() => _open = !_open;
+}

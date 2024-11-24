@@ -1,61 +1,27 @@
-﻿<aside class="flex flex-col gap-8 mb-8">
-    <MudCard Outlined="true" Class="!rounded-2xl flex-1 items-center  flex flex-col p-8 mt-8 gap-4 w-[16rem]">
-        <MudImage Class="h-20 w-20 rounded-xl" Src="images/avatar.png"></MudImage>
-        <MudText Typo="Typo.h4">Chillec</MudText>
-        <div class="text-center">
-            <MudText Typo="Typo.h5">68 <span class="opacity-50">members</span></MudText>
-            <MudText Typo="Typo.h5">4 <span class="opacity-50">played games</span></MudText>
-        </div>
-    </MudCard>
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-    @* <MudCard Outlined="true" Class="!rounded-2xl flex-1 items-center justify-center mb-8 flex flex-col p-8 gap-4 w-[16rem] p"> *@
-    @*     <MudImage Class="h-20 w-20 rounded-xl" Src="images/avatar.png"></MudImage> *@
-    @*     <MudText Typo="Typo.h4">Chillec</MudText> *@
-    @*     <div class="text-center"> *@
-    @*         <MudText Typo="Typo.h5">68 <span class="opacity-50">members</span></MudText> *@
-    @*         <MudText Typo="Typo.h5">4 <span class="opacity-50">played games</span></MudText> *@
-    @*     </div> *@
-    @* </MudCard> *@
-</aside>
+@if (!SelectedGuildState.Value.IsLoading)
+{
+    <DashboardGuildAside/>
+}
 <main class="w-full flex items-center justify-center">
-    @if (false)
+    @if (SelectedGuildState.Value.IsLoading)
     {
-        <MudCard Outlined="true" Class="flex !rounded-2xl p-8 gap-8">
-            <MudImage Class="h-64" Src="images/undraw_add_files_re_v09g.svg"></MudImage>
-            <div class="flex flex-col items-center justify-center gap-16">
-                <MudText Class="text-center" Typo="Typo.h3">This Server Has No <br><span class="text-[var(--mud-palette-primary)]">Bot</span> Yet</MudText>
-                <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Add Elevators</MudButton>
-            </div>
-        </MudCard>
-    }
-    else if (false)
-    {
-        <MudCard Outlined="true" Class="flex !rounded-2xl p-8 gap-8">
-            <MudImage Class="h-64" Src="images/undraw_create_re_57a3.svg"></MudImage>
-            <div class="flex flex-col items-center justify-center gap-16">
-                <MudText Class="text-center" Typo="Typo.h3">No Ongoing<br><span class="text-[var(--mud-palette-primary)]">Game</span> Yet</MudText>
-                <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Create Game</MudButton>
-            </div>
-        </MudCard>
+        <p>...</p>
     }
     else
-    {
-        <MudCard Outlined="true" Class="flex p-8 !rounded-2xl">
-            <div>
-                <MudText Typo="Typo.h3">Contestants</MudText>
-                no people
-            </div>
-            <div class="flex flex-col justify-center items-center gap-4">
-                <MudText Typo="Typo.h3">Game <span class="text-[var(--mud-palette-primary)] ">Lobby</span></MudText>
-                <MudText Typo="Typo.h4">[🎮] Elevators <span class="opacity-50">Game Room</span></MudText>
-                <MudText Typo="Typo.h4">98 <span class="opacity-50">Top Floor</span></MudText>
-                <MudText Typo="Typo.h4">4 <span class="opacity-50">Contestants</span></MudText>
-                <div>
-                    <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Start Game</MudButton>
-                    <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Error">Delete Game</MudButton>
-                </div>
-                
-            </div>
-        </MudCard>
-    }
+        switch (SelectedGuildState.Value.GuildStatus)
+        {
+            case GuildStatus.NoBot:
+                <DashboardGuildNoBot/>
+                break;
+            case GuildStatus.NoGame:
+                <DashboardGuildNoGame/>
+                break;
+            case GuildStatus.Lobby:
+                <DashboardGuildLobby/>
+                break;
+            case GuildStatus.Game:
+                break;
+        }
 </main>

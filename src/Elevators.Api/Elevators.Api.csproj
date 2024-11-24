@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Discord\" />
       <Folder Include="Endpoints\Configuration\Requests\" />
     </ItemGroup>
 

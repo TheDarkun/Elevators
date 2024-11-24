@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Elevators.Api.Endpoints.Guilds;
 
-public class GetGuilds : Endpoint<GetGuildsRequest, GetGuildsResponse>
+public class GetGuildList : Endpoint<GetGuildListRequest, GetGuildsResponse>
 {
     public AppDbContext AppDbContext { get; set; } = null!;
     public HttpClient HttpClient { get; set; } = null!;
@@ -18,7 +18,7 @@ public class GetGuilds : Endpoint<GetGuildsRequest, GetGuildsResponse>
         Get("/guilds");
     }
 
-    public override async Task HandleAsync(GetGuildsRequest req, CancellationToken ct)
+    public override async Task HandleAsync(GetGuildListRequest req, CancellationToken ct)
     {
         var user = await AppDbContext.Users.FirstOrDefaultAsync(u => u.SessionId == req.SessionId);
         if (user is null)

@@ -1,0 +1,37 @@
+﻿<MudCard Outlined="true" Class="flex gap-8 p-8 !rounded-2xl">
+    <div>
+        <MudText Typo="Typo.h3">Contestants</MudText>
+        <MudSimpleTable Elevation="0" Class="overflow-y-scroll h-[18.5rem]">
+            <tbody >
+                @for (int i = 0; i < 30; i++)
+                {
+                    <DashboardGuildLobbyRow/>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </div>
+    <div class="flex flex-col justify-center items-center gap-8">
+        <MudText Typo="Typo.h3">Game <span class="text-[var(--mud-palette-primary)] ">Lobby</span></MudText>
+        <MudText Typo="Typo.h4">4 <span class="opacity-50">Contestants</span></MudText>
+        <div class="flex items-stretch justify-stretch w-full px-12">
+            @* <MudInputLabel>Game Room</MudInputLabel> *@
+            <MudSelect @bind-Value="ChannelId" Label="Game Room" Class="w-full" HelperText="Where the bot notifies">
+                <MudSelectItem Value="1">[🎮] Elevators</MudSelectItem>
+                <MudSelectItem Value="2">[🎮] Second</MudSelectItem>
+                <MudSelectItem Value="3">[🎮] Third</MudSelectItem>
+                <MudSelectItem Value="4">[🎮] Loooooooooooooooooooooooooooooooooooooooooooong</MudSelectItem>
+            </MudSelect>
+        </div>
+        <div class="flex items-stretch justify-stretch w-full px-12">
+            @* <MudInputLabel>Top Floor</MudInputLabel> *@
+            <MudNumericField @bind-Value="FloorCount" Label="Top Floor" Min="3" Max="99"/>
+        </div>
+        @* <MudText Typo="Typo.h4">[🎮] Elevators <span class="opacity-50">Game Room</span></MudText> *@
+        @* <MudText Typo="Typo.h4">98 <span class="opacity-50">Top Floor</span></MudText> *@
+        <div class="flex gap-8">
+            <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Start Game</MudButton>
+            <MudButton Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
+        </div>
+
+    </div>
+</MudCard>

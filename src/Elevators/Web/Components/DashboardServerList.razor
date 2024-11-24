@@ -1,5 +1,5 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
-<MudCard Outlined="true" Class="w-24 flex flex-col overflow-scroll gap-4 p-4 m-8 !rounded-2xl" style="height: calc(100vh - 12.2rem)">
+<MudCard Outlined="true" Class="!w-[6rem] !min-w-[6rem] flex flex-col overflow-scroll gap-4 p-4 m-8 !rounded-2xl" style="height: calc(100vh - 12.2rem)">
     @if (UserState.Value.IsLoading)
     {
         <MudImage @onclick="_ => HandleGuildClick(0)" Class="rounded-full cursor-pointer" Src="images/avatar.png"/>
