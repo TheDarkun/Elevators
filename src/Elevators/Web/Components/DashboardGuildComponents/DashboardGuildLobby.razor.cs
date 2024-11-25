@@ -1,4 +1,5 @@
-﻿using Elevators.Store.Lobby;
+﻿using Elevators.Store.Game.Actions;
+using Elevators.Store.Lobby;
 using Elevators.Store.Lobby.Actions;
 using Elevators.Store.SelectedGuild.Actions;
 using Fluxor;
@@ -45,12 +46,13 @@ public partial class DashboardGuildLobby : IDisposable
         _timer?.Dispose();
     }
 
-    public async Task HandleStartGame()
+    
+    
+    public void HandleStartGame()
     {
-        if (ulong.TryParse(ChannelId, out var id))
-        {
-            Console.WriteLine(ChannelId);
-            Console.WriteLine(FloorCount);
-        }
+        if (!ulong.TryParse(ChannelId, out var id)) return;
+        _timer?.Stop();
+        _timer?.Dispose();
+        Dispatcher.Dispatch(new StartGameAction(GuildId, id, FloorCount));
     }
 }

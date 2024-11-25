@@ -15,13 +15,15 @@ public class JoinCommand
 
         var game = await appDbContext.Games
             .FirstOrDefaultAsync(g => g.GuildId == context.Guild.Id);
+        var guild = await appDbContext.SelectedGuilds.FirstOrDefaultAsync(g => g.GuildId == context.Guild.Id);
 
-        if (game is null)
+        if (game is null || guild is null)
         {
             await context.EditResponseAsync("There is no game on this server");
             return;
         }
 
+        
         var alreadyJoined = game.JoinedUsers.Contains(context.User.Id);
 
         if (alreadyJoined)
@@ -30,6 +32,12 @@ public class JoinCommand
             return;
         }
 
+        if (guild.Status == Models.GuildStatus.Game)
+        {
+            await context.EditResponseAsync("The game has already begun");
+            return;
+        }
+        
         await context.EditResponseAsync("Successfully joined");
         game.JoinedUsers.Add(context.User.Id);
         await appDbContext.SaveChangesAsync();

@@ -3,6 +3,7 @@ using System;
 using Elevators.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevators.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125133545_AddedRound2")]
+    partial class AddedRound2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -59,7 +62,7 @@ namespace Elevators.Api.Migrations
                     b.Property<int>("PlayerAction")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RoundId")
+                    b.Property<int?>("RoundId")
                         .HasColumnType("INTEGER");
 
                     b.Property<ulong>("UserId")
@@ -81,7 +84,7 @@ namespace Elevators.Api.Migrations
                     b.Property<int>("CurrentRound")
                         .HasColumnType("INTEGER");
 
-                    b.Property<ulong>("GuildId")
+                    b.Property<long>("GuildId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TopFloor")
@@ -147,9 +150,7 @@ namespace Elevators.Api.Migrations
                 {
                     b.HasOne("Elevators.Api.Models.Round", null)
                         .WithMany("Players")
-                        .HasForeignKey("RoundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoundId");
                 });
 
             modelBuilder.Entity("Elevators.Api.Models.Round", b =>

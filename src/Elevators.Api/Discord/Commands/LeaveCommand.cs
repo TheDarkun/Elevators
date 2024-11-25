@@ -21,6 +21,8 @@ public class LeaveCommand
             return;
         }
 
+        // TODO: leave when game began
+        
         var joined = game.JoinedUsers.Contains(context.User.Id);
 
         if (joined)

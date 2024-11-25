@@ -11,7 +11,7 @@
     }
     else
         // switch (SelectedGuildState.Value.GuildStatus)
-        switch (GuildStatus.Game)
+        switch (SelectedGuildState.Value.GuildStatus)
         {
             case GuildStatus.NoBot:
                 <DashboardGuildNoBot GuildId="GuildId"/>
@@ -23,7 +23,7 @@
                 <DashboardGuildLobby GuildId="GuildId"/>
                 break;
             case GuildStatus.Game:
-                <DashboardGuildGame/>
+                <DashboardGuildGame GuildId="GuildId"/>
                 break;
         }
 </main>

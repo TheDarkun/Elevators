@@ -1,12 +1,20 @@
-﻿<section class="w-full h-full mx-8 mt-16 flex flex-col overflow-hidden gap-8">
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@if (GameState.Value.IsLoading)
+{
+    <p>...</p>
+}
+else
+{
+    <section class="w-full h-full mx-8 mt-16 flex flex-col overflow-hidden gap-8">
     <MudCard Outlined="true" Class="flex justify-around items-center p-4 !rounded-2xl">
-        <MudText Typo="Typo.h4">68 <span class="opacity-50">Top Floor</span></MudText>
+        <MudText Typo="Typo.h4">@GameState.Value.TopFloor <span class="opacity-50">Top Floor</span></MudText>
         <div class="h-8 border-l-[var(--mud-palette-divider)] border-l-[1px]"></div>
-        <MudText Typo="Typo.h4">23 <span class="opacity-50">Current Round</span></MudText>
+        <MudText Typo="Typo.h4">@GameState.Value.CurrentRound <span class="opacity-50">Current Round</span></MudText>
         <div class="h-8 border-l-[var(--mud-palette-divider)] border-l-[1px]"></div>
-        <MudText Typo="Typo.h4">Matt Smith <span class="opacity-50">Top Player</span></MudText>
+        <MudText Typo="Typo.h4">NAME <span class="opacity-50">Top Player</span></MudText>
     </MudCard>
-    <div class="flex flex-row gap-8 mb-16 overflow-y-scroll"> 
+    <div class="flex flex-row gap-8 mb-16 overflow-y-scroll" style="height: 100%"> 
         <MudCard Outlined="true" Class="overflow-y-scroll  !rounded-2xl flex-1">
             <MudSimpleTable Elevation="0">
                 <thead>
@@ -32,23 +40,30 @@
                 </tr>
                 </thead>
                 <tbody>
-                @for (int i = 0; i < 20; i++)
+                @foreach (var player in GameState.Value.Players)
                 {
                     <tr>
-                        <td >
+                        <td>
                             <div class="flex gap-8 items-center">
-                                <MudImage Class="w-16 h-16 !rounded-2xl" Src="images/avatar.png"></MudImage>
-                                <MudText Typo="Typo.h4">Jane Doe</MudText>
+                                <MudImage Class="w-16 h-16 !rounded-2xl" Src=@($"https://cdn.discordapp.com/avatars/{player.UserId}/{player.Avatar}.webp?size=256")></MudImage>
+                                <MudText Typo="Typo.h4">@player.Name</MudText>
                             </div>
                         </td>
                         <td>
                             <div class="flex items-center justify-center" style="display: flex">
-                                <MudText Typo="Typo.h4">12</MudText>
+                                <MudText Typo="Typo.h4">@player.Floor</MudText>
                             </div>
                         </td>
                         <td >
                             <div class="flex items-center justify-center" style="display: flex">
-                                <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+                                @if (player.Submitted)
+                                {
+                                    <p>yes pes</p>
+                                }
+                                else
+                                {
+                                    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+                                }
                             </div>
                         </td>
                         <td>
@@ -56,14 +71,15 @@
                                 <MudButton Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Kick</MudButton>
                             </div>
                         </td>
-                    </tr>
+                    </tr>   
                 }
                 </tbody>
             </MudSimpleTable>
         </MudCard>
         <MudCard Class="w-[16rem] !rounded-2xl flex-col flex items-start justify-stretch p-8 gap-8" Outlined="true">
             <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Force Skip</MudButton>
-            <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
+            <MudButton OnClick="HandleDeleteGame" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
         </MudCard>
     </div>
 </section>
+}

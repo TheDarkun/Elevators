@@ -3,6 +3,7 @@ using System;
 using Elevators.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevators.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125133504_AddedRound")]
+    partial class AddedRound
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -39,57 +42,6 @@ namespace Elevators.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("Elevators.Api.Models.Player", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<ulong?>("CutPlayerId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Floor")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsAlive")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PlayerAction")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RoundId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<ulong>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoundId");
-
-                    b.ToTable("Player");
-                });
-
-            modelBuilder.Entity("Elevators.Api.Models.Round", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CurrentRound")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<ulong>("GuildId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TopFloor")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Rounds");
                 });
 
             modelBuilder.Entity("Elevators.Api.Models.SelectedGuild", b =>
@@ -141,20 +93,6 @@ namespace Elevators.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Elevators.Api.Models.Player", b =>
-                {
-                    b.HasOne("Elevators.Api.Models.Round", null)
-                        .WithMany("Players")
-                        .HasForeignKey("RoundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Elevators.Api.Models.Round", b =>
-                {
-                    b.Navigation("Players");
                 });
 #pragma warning restore 612, 618
         }
