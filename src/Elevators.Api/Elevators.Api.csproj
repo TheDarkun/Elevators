@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DSharpPlus" Version="5.0.0-alpha.5" />
+        <PackageReference Include="DSharpPlus.Commands" Version="5.0.0-alpha.5" />
         <PackageReference Include="FastEndpoints" Version="5.31.0" />
         <PackageReference Include="FastEndpoints.ClientGen" Version="5.31.0" />
         <PackageReference Include="FastEndpoints.Security" Version="5.31.0" />
@@ -23,11 +25,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Elevators\Elevators.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Discord\" />
-      <Folder Include="Endpoints\Configuration\Requests\" />
     </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-@if (!SelectedGuildState.Value.IsLoading)
+@if (!SelectedGuildState.Value.IsLoading && SelectedGuildState.Value.GuildStatus != GuildStatus.NoBot)
 {
-    <DashboardGuildAside/>
+    <DashboardGuildAside GuildId="GuildId"/>
 }
 <main class="w-full flex items-center justify-center">
     @if (SelectedGuildState.Value.IsLoading)
@@ -10,18 +10,20 @@
         <p>...</p>
     }
     else
-        switch (SelectedGuildState.Value.GuildStatus)
+        // switch (SelectedGuildState.Value.GuildStatus)
+        switch (GuildStatus.Game)
         {
             case GuildStatus.NoBot:
-                <DashboardGuildNoBot/>
+                <DashboardGuildNoBot GuildId="GuildId"/>
                 break;
             case GuildStatus.NoGame:
-                <DashboardGuildNoGame/>
+                <DashboardGuildNoGame GuildId="GuildId"/>
                 break;
             case GuildStatus.Lobby:
-                <DashboardGuildLobby/>
+                <DashboardGuildLobby GuildId="GuildId"/>
                 break;
             case GuildStatus.Game:
+                <DashboardGuildGame/>
                 break;
         }
 </main>

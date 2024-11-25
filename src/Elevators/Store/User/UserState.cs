@@ -7,12 +7,12 @@ public class UserState
 {
     public string Username { get; }
     public string Avatar { get; }
-    public long Id { get; }
+    public ulong Id { get; }
     public bool IsLoading { get; } = true;
     
     private UserState() {} // Required for creating initial state
 
-    public UserState(string username, string avatar, long id, bool isLoading = false)
+    public UserState(string username, string avatar, ulong id, bool isLoading = false)
     {
         Username = username;
         Avatar = avatar;

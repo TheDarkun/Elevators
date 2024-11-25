@@ -14,7 +14,7 @@ public partial class DashboardGuild
     public IDispatcher Dispatcher { get; set; } = null!;
     
     [Parameter]
-    public long GuildId { get; set; }
+    public ulong GuildId { get; set; }
 
     protected override void OnParametersSet()
     {

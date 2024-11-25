@@ -12,4 +12,5 @@ public class AppDbContext : DbContext
     
     public DbSet<User> Users { get; set; }
     public DbSet<Models.SelectedGuild> SelectedGuilds { get; set; }
+    public DbSet<Models.Game> Games { get; set; }
 }

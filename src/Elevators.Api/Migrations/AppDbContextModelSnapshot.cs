@@ -17,29 +17,43 @@ namespace Elevators.Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
-            modelBuilder.Entity("Elevators.Api.Models.SelectedGuild", b =>
+            modelBuilder.Entity("Elevators.Api.Models.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("GameRoomId")
+                    b.Property<ulong>("GameRoomId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("GuildId")
+                    b.Property<ulong>("GuildId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("JoinedUsers")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("TopFloor")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("Elevators.Api.Models.SelectedGuild", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("GuildId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("PlayedGames")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TopFloor")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -70,7 +84,7 @@ namespace Elevators.Api.Migrations
                     b.Property<Guid>("SessionId")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("UserId")
+                    b.Property<ulong>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

@@ -1,0 +1,69 @@
+﻿<section class="w-full h-full mx-8 mt-16 flex flex-col overflow-hidden gap-8">
+    <MudCard Outlined="true" Class="flex justify-around items-center p-4 !rounded-2xl">
+        <MudText Typo="Typo.h4">68 <span class="opacity-50">Top Floor</span></MudText>
+        <div class="h-8 border-l-[var(--mud-palette-divider)] border-l-[1px]"></div>
+        <MudText Typo="Typo.h4">23 <span class="opacity-50">Current Round</span></MudText>
+        <div class="h-8 border-l-[var(--mud-palette-divider)] border-l-[1px]"></div>
+        <MudText Typo="Typo.h4">Matt Smith <span class="opacity-50">Top Player</span></MudText>
+    </MudCard>
+    <div class="flex flex-row gap-8 mb-16 overflow-y-scroll"> 
+        <MudCard Outlined="true" Class="overflow-y-scroll  !rounded-2xl flex-1">
+            <MudSimpleTable Elevation="0">
+                <thead>
+                <tr>
+                    <th>
+                        <div class="flex items-center justify-center">
+                            <MudText Typo="Typo.h4">Contestant</MudText>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-center">
+                            <MudText Typo="Typo.h4">Floor</MudText>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-center">
+                            <MudText Typo="Typo.h4">Action</MudText>
+                        </div>
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                @for (int i = 0; i < 20; i++)
+                {
+                    <tr>
+                        <td >
+                            <div class="flex gap-8 items-center">
+                                <MudImage Class="w-16 h-16 !rounded-2xl" Src="images/avatar.png"></MudImage>
+                                <MudText Typo="Typo.h4">Jane Doe</MudText>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex items-center justify-center" style="display: flex">
+                                <MudText Typo="Typo.h4">12</MudText>
+                            </div>
+                        </td>
+                        <td >
+                            <div class="flex items-center justify-center" style="display: flex">
+                                <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex justify-end items-center">
+                                <MudButton Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8" Size="Size.Large" Color="Color.Primary">Kick</MudButton>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </MudSimpleTable>
+        </MudCard>
+        <MudCard Class="w-[16rem] !rounded-2xl flex-col flex items-start justify-stretch p-8 gap-8" Outlined="true">
+            <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Force Skip</MudButton>
+            <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
+        </MudCard>
+    </div>
+</section>

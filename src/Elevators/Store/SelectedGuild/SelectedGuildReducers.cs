@@ -7,9 +7,9 @@ public class SelectedGuildReducers
 {
     [ReducerMethod]
     public static SelectedGuildState ReduceFetchSelectedGuildState(SelectedGuildState state, FetchSelectedGuildAction action)
-        => new SelectedGuildState(GuildStatus.NoBot, true);
+        => new SelectedGuildState(GuildStatus.NoBot, 0, true);
     
     [ReducerMethod]
     public static SelectedGuildState ReduceFetchSelectedGuildResultState(SelectedGuildState state, FetchSelectedGuildResultAction action)
-        => new SelectedGuildState(action.Response.SelectedGuild.Status, false);
+        => new SelectedGuildState(action.Response.GuildStatus, action.Response.MemberCount, false);
 }

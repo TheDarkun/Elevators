@@ -5,10 +5,11 @@ using Elevators.Api.Models;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using Elevators.Api.Endpoints.Guilds.Responses;
 
 namespace Elevators.Api.Endpoints.Guilds;
 
-public class GetGuildList : Endpoint<GetGuildListRequest, GetGuildsResponse>
+public class GetGuildList : Endpoint<GetGuildListRequest, Elevators.Api.Endpoints.Guilds.Responses.GetGuildListResponse>
 {
     public AppDbContext AppDbContext { get; set; } = null!;
     public HttpClient HttpClient { get; set; } = null!;
@@ -40,19 +41,19 @@ public class GetGuildList : Endpoint<GetGuildListRequest, GetGuildsResponse>
         var content = await response.Content.ReadAsStringAsync();
         var guildsObject = JArray.Parse(content);
 
-        var guilds = new List<Guild>();
+        var guilds = new List<Models.Guild>();
         foreach (var guildObject in guildsObject)
         {
             if (guildObject["permissions"]?.ToString() != "2147483647") continue;
-            var guild = new Guild()
+            var guild = new Models.Guild()
             {
                 Name = guildObject["name"]!.ToString(),
-                Id = long.Parse(guildObject["id"]!.ToString()),
+                Id = ulong.Parse(guildObject["id"]!.ToString()),
                 Icon = guildObject["icon"]!.ToString(),
             };
             guilds.Add(guild);
         }
 
-        await SendOkAsync(new GetGuildsResponse() { Guilds = guilds }, ct);
+        await SendOkAsync(new Elevators.Api.Endpoints.Guilds.Responses.GetGuildListResponse() { Guilds = guilds }, ct);
     }
 }

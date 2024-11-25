@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Elevators.Api.Endpoints.User;
 
-public class GetUserData : Endpoint<GetUserRequest, GetUserResponse>
+public class GetUserData : Endpoint<GetUserRequest, Elevators.Api.Endpoints.User.Responses.GetUserResponse>
 {
     public AppDbContext AppDbContext { get; set; } = null!;
     public HttpClient HttpClient { get; set; } = null!;
@@ -39,10 +39,10 @@ public class GetUserData : Endpoint<GetUserRequest, GetUserResponse>
         var content = await response.Content.ReadAsStringAsync();
         var userObject = JObject.Parse(content);
 
-        var userResponse = new GetUserResponse()
+        var userResponse = new Elevators.Api.Endpoints.User.Responses.GetUserResponse()
         {
             Username = userObject["username"]!.ToString(),
-            Id = long.Parse(userObject["id"]!.ToString()),
+            Id = ulong.Parse(userObject["id"]!.ToString()),
             Avatar = userObject["avatar"]!.ToString(),
         };
         await SendOkAsync(userResponse, ct);

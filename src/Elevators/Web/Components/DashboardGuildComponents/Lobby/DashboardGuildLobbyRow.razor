@@ -1,9 +1,9 @@
 ﻿<tr>
     <td>
-        <MudImage Class="w-12 h-12 rounded-xl" Src="images/avatar.png"></MudImage>
+        <MudImage Class="w-12 h-12 rounded-xl" Src=@($"https://cdn.discordapp.com/avatars/{LobbyUser.Id}/{LobbyUser.Avatar}.webp?size=256")></MudImage>
     </td>
     <td>
-        <MudText>darkun68</MudText>
+        <MudText>@LobbyUser.Name</MudText>
     </td>
     <td>
         <MudToggleIconButton @bind-Toggled="@_open" Icon="@Icons.Material.Filled.ArrowDropDown" Color="Color.Primary" ToggledIcon="@Icons.Material.Filled.ArrowDropUp" ToggledColor="Color.Primary" />

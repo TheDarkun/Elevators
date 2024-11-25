@@ -66,7 +66,7 @@ public class AuthenticationMiddleware
                         RefreshToken = account["refresh_token"]!.ToString(),
                         IssuedAt = DateTime.Now,
                         ExpiresIn = int.Parse(account["expires_in"]!.ToString()),
-                        UserId = long.Parse(userId),
+                        UserId = ulong.Parse(userId),
                         SessionId = sessionId
                     });
                     await appDbContext.SaveChangesAsync();

@@ -1,11 +1,11 @@
 ﻿@if (!ImageLoadFailed)
 {
-    <img @onclick="() => OnImageClick.InvokeAsync(Guild.Id)" class="rounded-full cursor-pointer" src=@($"https://cdn.discordapp.com/icons/{Guild.Id}/{Guild.Icon}.webp?size=256") 
+    <img @onclick="() => OnImageClick.InvokeAsync(Guild.Id)" class=@($"rounded-full cursor-pointer {Class}") src=@($"https://cdn.discordapp.com/icons/{Guild.Id}/{Guild.Icon}.webp?size=256") 
                                       @onerror="HandleImageError" alt="@Guild.Name"/>
 }
 else
 {
-    <div @onclick="() => OnImageClick.InvokeAsync(Guild.Id)" class="bg-[var(--mud-palette-primary)] min-h-16 rounded-full flex items-center justify-center cursor-pointer">
+    <div @onclick="() => OnImageClick.InvokeAsync(Guild.Id)" class=@($"bg-[var(--mud-palette-primary)] min-h-16 rounded-full flex items-center justify-center cursor-pointer {Class}")>
         <MudText Typo="Typo.h4">@(Guild.Name.Substring(0,2))</MudText>
     </div>
 }

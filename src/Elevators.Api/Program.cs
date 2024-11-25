@@ -1,5 +1,6 @@
 using System.Text;
 using Elevators.Api.Database;
+using Elevators.Api.Discord;
 using Elevators.Authentication;
 using FastEndpoints;
 using FastEndpoints.ClientGen;
@@ -15,7 +16,7 @@ using Tailwind;
 var bld = WebApplication.CreateBuilder(args);
 bld.Services.AddCascadingAuthenticationState();
 bld.Services.AddDbContext<AppDbContext>(optionsBuilder => optionsBuilder.UseSqlite("Data Source=sqlite.db"));
-
+bld.Services.AddSingleton<DiscordBot>();
 bld.Services
     .AddHttpClient()
     .AddFastEndpoints()
@@ -96,6 +97,7 @@ if (app.Environment.IsDevelopment())
 {
     _ = app.RunTailwind("tailwind", "../Elevators");
 }
-
+var discordBot = app.Services.GetRequiredService<DiscordBot>();
+await discordBot.InitializeAsync(bld.Configuration.GetValue<string>("botToken")!);
 app.UseMiddleware<AuthenticationMiddleware>();
 app.Run();

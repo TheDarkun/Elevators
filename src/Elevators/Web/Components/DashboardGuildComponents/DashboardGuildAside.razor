@@ -1,12 +1,19 @@
-﻿<aside class="flex flex-col gap-8 mb-8">
-    <MudCard Outlined="true" Class="!rounded-2xl flex-1 items-center  flex flex-col p-8 mt-8 gap-4 w-[16rem]">
-        <MudImage Class="h-20 w-20 rounded-xl" Src="images/avatar.png"></MudImage>
-        <MudText Typo="Typo.h4">Chillec</MudText>
-        <div class="text-center">
-            <MudText Typo="Typo.h5">68 <span class="opacity-50">members</span></MudText>
-            <MudText Typo="Typo.h5">4 <span class="opacity-50">played games</span></MudText>
-        </div>
-    </MudCard>
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<aside class="flex flex-col gap-8 mb-8">
+    @if (!GuildListState.Value.IsLoading && !SelectedGuildState.Value.IsLoading)
+    {
+        var guild = GuildListState.Value.Guilds.FirstOrDefault(g => g.Id == GuildId);
+        
+        <MudCard Outlined="true" Class="!rounded-2xl flex-1 items-center  flex flex-col p-8 mt-8 gap-4 w-[16rem]">
+            <GuildIcon Class="w-20 h-20 rounded-xl !cursor-text" Guild="guild"/>
+            <MudText Typo="Typo.h4">@guild.Name</MudText>
+            <div class="text-center">
+                <MudText Typo="Typo.h5">@SelectedGuildState.Value.MemberCount <span class="opacity-50">members</span></MudText>
+                @* <MudText Typo="Typo.h5">4 <span class="opacity-50">played games</span></MudText> *@
+            </div>
+        </MudCard>
+    }
 
     @* <MudCard Outlined="true" Class="!rounded-2xl flex-1 items-center justify-center mb-8 flex flex-col p-8 gap-4 w-[16rem] p"> *@
     @*     <MudImage Class="h-20 w-20 rounded-xl" Src="images/avatar.png"></MudImage> *@

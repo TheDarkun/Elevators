@@ -27,7 +27,7 @@ public partial class DashboardServerList
     [Inject]
     public NavigationManager NavigationManager { get; set; } = null!;
     
-    private async Task HandleGuildClick(long guildId)
+    private async Task HandleGuildClick(ulong guildId)
     {
         if (guildId == 0)
         {

@@ -2,5 +2,5 @@
 
 public class GetSelectedGuildRequest
 {
-    public long GuildId { get; set; }
+    public ulong GuildId { get; set; }
 }
