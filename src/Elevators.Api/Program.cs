@@ -17,6 +17,7 @@ var bld = WebApplication.CreateBuilder(args);
 bld.Services.AddCascadingAuthenticationState();
 bld.Services.AddDbContext<AppDbContext>(optionsBuilder => optionsBuilder.UseSqlite("Data Source=sqlite.db"));
 bld.Services.AddSingleton<DiscordBot>();
+bld.Services.AddScoped<ElevatorsManager>();
 bld.Services
     .AddHttpClient()
     .AddFastEndpoints()
@@ -98,6 +99,8 @@ if (app.Environment.IsDevelopment())
     _ = app.RunTailwind("tailwind", "../Elevators");
 }
 var discordBot = app.Services.GetRequiredService<DiscordBot>();
+// var elevatorsManager = app.Services.GetRequiredService<ElevatorsManager>();
+
 await discordBot.InitializeAsync(bld.Configuration.GetValue<string>("botToken")!);
 app.UseMiddleware<AuthenticationMiddleware>();
 app.Run();

@@ -45,4 +45,11 @@ public class GameEffects(ApiClient apiClient)
         var round = await apiClient.GetCurrentRoundAsync(action.GuildId);
         dispatcher.Dispatch(new FetchCurrentRoundResultAction(round));
     }
+    
+    [EffectMethod]
+    public async Task HandleUpdateGameAction(UpdateGameAction action, IDispatcher dispatcher)
+    {
+        var round = await apiClient.GetCurrentRoundAsync(action.GuildId);
+        dispatcher.Dispatch(new FetchCurrentRoundResultAction(round));
+    }
 }

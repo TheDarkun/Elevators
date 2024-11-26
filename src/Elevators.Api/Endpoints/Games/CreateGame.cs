@@ -13,6 +13,7 @@ public class CreateGame : Endpoint<CreateGameRequest>
 {
     public AppDbContext AppDbContext { get; set; } = null!;
     public DiscordBot DiscordBot { get; set; } = null!;
+    public ElevatorsManager ElevatorsManager { get; set; } = null!;
     public override void Configure()
     {
         Post("/games/create");
@@ -48,46 +49,7 @@ public class CreateGame : Endpoint<CreateGameRequest>
         await AppDbContext.SaveChangesAsync(ct);
         await SendOkAsync(null, ct);
 
-        var guild = DiscordBot.Client.Guilds.FirstOrDefault(g => g.Key == req.GuildId).Value;
-        var channel = guild.Channels.FirstOrDefault(c => c.Key == req.GameRoomId).Value;
-
-
-        var table = new List<TestSix>();
-
-        foreach (var player in players)
-        {
-            table.Add(new TestSix()
-            {
-                Contestant = guild.Members.FirstOrDefault(m => m.Key == player.UserId).Value.Username,
-                Floor = 1,
-                Action = "Pending..."
-            });
-        }
-
-        string output = Formatter.Format(table);
-        var embed = new DiscordEmbedBuilder
-        {
-            Title = "Initial game state", // Optional: set a title,
-            
-            Description = $"""
-                          **Top Floor:** {req.TopFloor}
-                          **Current Round:** 1
-                          ```
-                          {output}
-                          ```
-                          """, 
-            Color = DiscordColor.Blurple // Optional: set the embed color
-        };
-
-// Send the embed
-        await channel.SendMessageAsync(embed: embed);
-
+        await ElevatorsManager.ShowGameStatus(req.GuildId);
+        // await ElevatorsManager.ShowGameActionSelect(req.GuildId);
     }
-}
-
-public class TestSix
-{
-    public string Contestant { get; set; }
-    public int Floor { get; set; }
-    public string Action { get; set; }
 }

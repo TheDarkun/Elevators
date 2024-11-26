@@ -58,7 +58,14 @@ else
                             <div class="flex items-center justify-center" style="display: flex">
                                 @if (player.Submitted)
                                 {
-                                    <p>yes pes</p>
+                                    if (GameState.Value.IsFinished)
+                                    {
+                                        <MudText Typo="Typo.h4">@player.PlayerAction @(player.PlayerAction == PlayerAction.Cut ? GameState.Value.Players.FirstOrDefault(p => p.UserId == player.CutPlayerId).Name : "")</MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Primary" Size="Size.Large"/>
+                                    }
                                 }
                                 else
                                 {
@@ -77,8 +84,16 @@ else
             </MudSimpleTable>
         </MudCard>
         <MudCard Class="w-[16rem] !rounded-2xl flex-col flex items-start justify-stretch p-8 gap-8" Outlined="true">
-            <MudButton Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Force Skip</MudButton>
-            <MudButton OnClick="HandleDeleteGame" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
+            @if (GameState.Value.IsFinished)
+            {
+                <MudButton OnClick="HandleDeleteGame" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Send Results</MudButton>
+                <MudButton OnClick="HandleDeleteGame" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Next Round</MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Force Skip</MudButton>
+            }
+            <MudButton OnClick="HandleDeleteGame" Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
         </MudCard>
     </div>
 </section>

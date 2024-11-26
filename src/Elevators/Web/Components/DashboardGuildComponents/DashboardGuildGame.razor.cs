@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace Elevators.Web.Components.DashboardGuildComponents;
 
-public partial class DashboardGuildGame
+public partial class DashboardGuildGame : IDisposable
 {
+    private System.Timers.Timer _timer;
+    
     [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
 
@@ -18,6 +20,8 @@ public partial class DashboardGuildGame
     
     private void HandleDeleteGame()
     {
+        _timer?.Stop();
+        _timer?.Dispose();
         Dispatcher.Dispatch(new DeleteGameAction(GuildId));
     }
 
@@ -25,5 +29,16 @@ public partial class DashboardGuildGame
     {
         base.OnInitialized();
         Dispatcher.Dispatch(new FetchCurrentRoundAction(GuildId));
+        
+        _timer = new (1500);
+        _timer.Elapsed += async (sender, e) => Dispatcher.Dispatch(new UpdateGameAction(GuildId));
+        _timer.AutoReset = true;
+        _timer.Enabled = true;
+    }
+    
+    public void Dispose()
+    {
+        _timer?.Stop();
+        _timer?.Dispose();
     }
 }

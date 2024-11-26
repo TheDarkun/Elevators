@@ -16,7 +16,15 @@ namespace Elevators.Api.Discord;
 
 public class DiscordBot
 {
+    private readonly IServiceProvider _serviceProvider;
+
     public DiscordClient Client { get; private set; }
+
+    public DiscordBot(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
     public async Task InitializeAsync(string token)
     {
         DiscordClientBuilder builder = DiscordClientBuilder.CreateDefault(token, DiscordIntents.All);
@@ -32,13 +40,22 @@ public class DiscordBot
         
         builder.ConfigureEventHandlers
             (
-                b => b.HandleMessageCreated(async (s, e) =>
+                b =>
                 {
-                    if (e.Message.Content.ToLower().StartsWith("ping"))
+                    b.HandleMessageCreated(async (s, e) =>
                     {
-                        await e.Message.RespondAsync("pong!");
-                    }
-                })
+                        if (e.Message.Content.ToLower().StartsWith("ping"))
+                        {
+                            await e.Message.RespondAsync("pong!");
+                        }
+                    });
+                    b.HandleComponentInteractionCreated(async (s, e) =>
+                    {
+                        using var scope = _serviceProvider.CreateScope();
+                        var elevatorsManager = scope.ServiceProvider.GetRequiredService<ElevatorsManager>();
+                        await elevatorsManager.HandlePlayerActionSelect(e);
+                    });
+                }
             );
 
         
