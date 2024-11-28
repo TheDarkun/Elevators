@@ -7,7 +7,7 @@ public class GameReducers
 {
     [ReducerMethod]
     public static GameState ReduceFetchCurrentRoundAction(GameState gameState, FetchCurrentRoundAction action)
-        => new GameState(true, gameState.IsFinished, gameState.CurrentRound, gameState.TopFloor, gameState.Players);
+        => new GameState(true, gameState.IsFinished, gameState.CurrentRound, gameState.TopFloor, gameState.Players, gameState.Finished, gameState.WinnerIds);
 
     [ReducerMethod]
     public static GameState ReduceFetchCurrentRoundResultAction(GameState gameState, FetchCurrentRoundResultAction action)
@@ -21,5 +21,5 @@ public class GameReducers
             Floor = p.Floor,
             CutPlayerId = p.CutPlayerId,
             Submitted = p.Submitted
-        }).ToList());
+        }).ToList(), action.Response.Finished, action.Response.WinnerIds.ToArray());
 }

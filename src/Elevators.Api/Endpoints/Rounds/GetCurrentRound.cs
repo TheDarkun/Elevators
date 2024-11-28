@@ -22,7 +22,7 @@ public class GetCurrentRound : Endpoint<GetCurrentRoundRequest, Elevators.Api.En
     {
         var round = await AppDbContext.Rounds.Include(round => round.Players).FirstOrDefaultAsync(r => r.GuildId == req.GuildId, ct);
         bool gameFinished = true;
-        foreach (var player in round.Players.Where(player => player.PlayerAction == PlayerAction.NoAction))
+        foreach (var player in round.Players.Where(player => player.PlayerAction == PlayerAction.NoAction && player.IsAlive))
         {
             gameFinished = false;
         }
@@ -52,7 +52,9 @@ public class GetCurrentRound : Endpoint<GetCurrentRoundRequest, Elevators.Api.En
                 Players = players,
                 IsFinished = gameFinished,
                 CurrentRound = round.CurrentRound,
-                TopFloor = game.TopFloor
+                TopFloor = game.TopFloor,
+                Finished = game.Finished,
+                WinnerIds = game.WinnerIds
             };
             await SendOkAsync(response, ct);
             return;
@@ -78,6 +80,8 @@ public class GetCurrentRound : Endpoint<GetCurrentRoundRequest, Elevators.Api.En
             IsFinished = gameFinished,
             CurrentRound = round.CurrentRound,
             TopFloor = game.TopFloor,
+            Finished = game.Finished,
+            WinnerIds = game.WinnerIds
         };
         await SendOkAsync(response, ct);
 

@@ -8,6 +8,8 @@ public class GetCurrentRoundResponse
     public bool IsFinished { get; set; }
     public int CurrentRound { get; set; }
     public int TopFloor { get; set; }
+    public bool Finished { get; set; }
+    public ulong[] WinnerIds { get; set; }
 }
 
 public class GetCurrentRoundPlayerResponse

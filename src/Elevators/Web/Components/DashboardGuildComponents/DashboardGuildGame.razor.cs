@@ -10,6 +10,9 @@ public partial class DashboardGuildGame : IDisposable
     private System.Timers.Timer _timer;
     
     [Inject]
+    public ApiClient ApiClient { get; set; } = null!;
+    
+    [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
 
     [Inject]
@@ -25,6 +28,28 @@ public partial class DashboardGuildGame : IDisposable
         Dispatcher.Dispatch(new DeleteGameAction(GuildId));
     }
 
+    public async Task HandleSendResults()
+    {
+        try
+        {
+            await ApiClient.SendRoundResultsAsync(GuildId);
+        }
+        catch (Exception _)
+        {
+        }
+    }
+
+    public async Task HandleNextRound()
+    {
+        try
+        {
+            await ApiClient.StartNewRoundAsync(GuildId);
+        }
+        catch (Exception _)
+        {
+        }
+    }
+    
     protected override void OnInitialized()
     {
         base.OnInitialized();

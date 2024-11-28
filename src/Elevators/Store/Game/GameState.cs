@@ -10,15 +10,19 @@ public class GameState
     public int CurrentRound { get; }
     public int TopFloor { get; }
     public List<Player> Players { get; } = [];
+    public bool Finished { get; }
+    public ulong[] WinnerIds { get; }
     private GameState() {} // Required for creating initial state
 
-    public GameState(bool isLoading, bool isFinished, int currentRound, int topFloor, List<Player> players)
+    public GameState(bool isLoading, bool isFinished, int currentRound, int topFloor, List<Player> players, bool finished, ulong[] winnerIds)
     {
         IsLoading = isLoading;
         IsFinished = isFinished;
         CurrentRound = currentRound;
         TopFloor = topFloor;
         Players = players;
+        Finished = finished;
+        WinnerIds = winnerIds;
     }
 }
 

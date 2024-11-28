@@ -12,7 +12,10 @@ else
         <div class="h-8 border-l-[var(--mud-palette-divider)] border-l-[1px]"></div>
         <MudText Typo="Typo.h4">@GameState.Value.CurrentRound <span class="opacity-50">Current Round</span></MudText>
         <div class="h-8 border-l-[var(--mud-palette-divider)] border-l-[1px]"></div>
-        <MudText Typo="Typo.h4">NAME <span class="opacity-50">Top Player</span></MudText>
+        @if (GameState.Value.Players.Any())
+        {
+            <MudText Typo="Typo.h4">@(GameState.Value.Players.OrderByDescending(p => p.Floor).FirstOrDefault().Name) <span class="opacity-50">Top Player</span></MudText>
+        }
     </MudCard>
     <div class="flex flex-row gap-8 mb-16 overflow-y-scroll" style="height: 100%"> 
         <MudCard Outlined="true" Class="overflow-y-scroll  !rounded-2xl flex-1">
@@ -40,13 +43,19 @@ else
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var player in GameState.Value.Players)
+                @if (GameState.Value.Players.Any())
                 {
+                    foreach (var player in GameState.Value.Players)
+                    {
                     <tr>
                         <td>
                             <div class="flex gap-8 items-center">
-                                <MudImage Class="w-16 h-16 !rounded-2xl" Src=@($"https://cdn.discordapp.com/avatars/{player.UserId}/{player.Avatar}.webp?size=256")></MudImage>
-                                <MudText Typo="Typo.h4">@player.Name</MudText>
+                                @if (GameState.Value.WinnerIds.Contains(player.UserId))
+                                {
+                                    <MudImage Src="images/crown.svg" Style="width: 3rem; position: absolute; transform: translate(30px, -32px) rotate(30deg);"/>
+                                }
+                                <MudImage Class=@($"w-16 h-16 !rounded-2xl") Style=@(player.IsAlive ? "" : "filter: saturate(0);") Src=@($"https://cdn.discordapp.com/avatars/{player.UserId}/{player.Avatar}.webp?size=256")></MudImage>
+                                <MudText Class="@(player.IsAlive ? "" : "line-through")" Typo="Typo.h4">@player.Name</MudText>
                             </div>
                         </td>
                         <td>
@@ -56,7 +65,11 @@ else
                         </td>
                         <td >
                             <div class="flex items-center justify-center" style="display: flex">
-                                @if (player.Submitted)
+                                @if (!player.IsAlive && player.PlayerAction == PlayerAction.NoAction)
+                                {
+                                    <MudText Typo="Typo.h4">Eliminated</MudText>
+                                }
+                                else if (player.Submitted)
                                 {
                                     if (GameState.Value.IsFinished)
                                     {
@@ -79,6 +92,7 @@ else
                             </div>
                         </td>
                     </tr>   
+                    }
                 }
                 </tbody>
             </MudSimpleTable>
@@ -86,14 +100,20 @@ else
         <MudCard Class="w-[16rem] !rounded-2xl flex-col flex items-start justify-stretch p-8 gap-8" Outlined="true">
             @if (GameState.Value.IsFinished)
             {
-                <MudButton OnClick="HandleDeleteGame" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Send Results</MudButton>
-                <MudButton OnClick="HandleDeleteGame" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Next Round</MudButton>
+                <MudButton OnClick="HandleSendResults" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Send Results</MudButton>
+                if(!GameState.Value.Finished)
+                {
+                    <MudButton OnClick="HandleNextRound" Variant="Variant.Filled" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Next Round</MudButton>
+                }
             }
             else
             {
-                <MudButton Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Force Skip</MudButton>
+                if (!GameState.Value.Finished)
+                {
+                    <MudButton Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Force Skip</MudButton>
+                }
             }
-            <MudButton OnClick="HandleDeleteGame" Variant="Variant.Outlined" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
+            <MudButton OnClick="HandleDeleteGame" Variant="@(GameState.Value.Finished ? Variant.Filled : Variant.Outlined)" Class="!rounded-xl !p-3 !px-8 w-full" Size="Size.Large" Color="Color.Primary">Delete Game</MudButton>
         </MudCard>
     </div>
 </section>
